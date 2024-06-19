@@ -26,6 +26,8 @@ void init_paddle(struct Paddle* paddle, float x, float y, float w, float h);
 
 void build_paddle_hitbox(struct Paddle paddle, struct Hitbox* hitbox);
 
-void update_paddle(struct Paddle* paddle, float dt);
+//Add the ball_position parameter to keep track of the vertical position component of the ball
+
+void update_paddle(struct Paddle* paddle, float dt, float ball_position);
 
 void render_paddle(struct Paddle paddle);

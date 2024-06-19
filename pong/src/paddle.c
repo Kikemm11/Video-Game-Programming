@@ -31,9 +31,9 @@ void build_paddle_hitbox(struct Paddle paddle, struct Hitbox* hitbox)
     hitbox->y2 = paddle.y + paddle.height;
 }
 
-void update_paddle(struct Paddle* paddle, float dt)
+void update_paddle(struct Paddle* paddle, float dt, float ball_position)
 {
-    paddle->y += paddle->vy * dt;
+    paddle->y = ball_position;                                                  //Update paddle position to ball_position to keep track of it
 
     paddle->y = MAX(0, MIN(paddle->y, TABLE_HEIGHT - PADDLE_HEIGHT));
 }
