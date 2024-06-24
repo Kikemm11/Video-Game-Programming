@@ -11,6 +11,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 #include <SFML/Graphics.hpp>
 
@@ -25,7 +26,7 @@ public:
 
     virtual ~BaseState() {}
 
-    virtual void enter(std::shared_ptr<World> world, std::shared_ptr<Bird> bird) noexcept {}
+    virtual void enter(std::shared_ptr<World> world, std::shared_ptr<Bird> bird, std::string from_state) noexcept {}
 
     virtual void exit() noexcept {}
 

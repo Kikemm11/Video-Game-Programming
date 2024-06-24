@@ -37,6 +37,8 @@ public:
     void update(float dt) noexcept;
 
     void render(sf::RenderTarget& target) const noexcept;
+
+    int score{0};
 private:
     bool generate_logs;
 
@@ -53,5 +55,5 @@ private:
     std::mt19937 rng;
 
     float logs_spawn_timer{0.f};
-    float last_log_y{0.f};
+    float last_log_y{0.f}; 
 };

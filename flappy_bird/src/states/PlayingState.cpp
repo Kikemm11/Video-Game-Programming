@@ -19,11 +19,20 @@ PlayingState::PlayingState(StateMachine* sm) noexcept
 
 }
 
-void PlayingState::enter(std::shared_ptr<World> _world, std::shared_ptr<Bird> _bird) noexcept
+void PlayingState::enter(std::shared_ptr<World> _world, std::shared_ptr<Bird> _bird, std::string from_state) noexcept
 {
     world = _world;
-    world->reset(true);
     
+    if (from_state != "pause")
+    {
+        world->reset(true);
+    }
+    
+    if (from_state == "pause")
+    {
+        score = world->score;
+    }
+  
     if (_bird == nullptr)
     {
         bird = std::make_shared<Bird>(
@@ -34,7 +43,12 @@ void PlayingState::enter(std::shared_ptr<World> _world, std::shared_ptr<Bird> _b
     else
     {
         bird = _bird;
+
+        if (from_state != "pause")
+    {
         bird->reset(Settings::VIRTUAL_WIDTH / 2 - Settings::BIRD_WIDTH / 2, Settings::VIRTUAL_HEIGHT / 2 - Settings::BIRD_HEIGHT / 2);
+    }
+        
     }
 }
 
@@ -43,6 +57,11 @@ void PlayingState::handle_inputs(const sf::Event& event) noexcept
     if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
     {
         bird->jump();
+    }
+    if (event.key.code == sf::Keyboard::Space)
+    {
+        state_machine->change_state("pause", "playing", world, bird);
+        return;
     }
 }
 
@@ -55,13 +74,14 @@ void PlayingState::update(float dt) noexcept
     {
         Settings::sounds["explosion"].play();
         Settings::sounds["hurt"].play();
-        state_machine->change_state("count_down", world, bird);
+        state_machine->change_state("count_down", "playing", world, bird);
         return;
     }
 
     if (world->update_scored(bird->get_collision_rect()))
     {
         ++score;
+        world->score = score;
         Settings::sounds["score"].play();
     }
 }
