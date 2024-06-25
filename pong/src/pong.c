@@ -114,8 +114,8 @@ void update_pong(struct Pong* pong, double dt)
         //Update ball first and then pass its popsition as a parameter to update_paddle
 
         update_ball(&pong->ball, dt);
-        update_paddle(&pong->player1, dt, pong->ball.y);
-        update_paddle(&pong->player2, dt, pong->ball.y);
+        update_paddle(&pong->player1, dt);
+        update_paddle_cpu(&pong->player2, dt, pong->ball.y);
         
         struct Hitbox ball_hitbox;
         build_ball_hitbox(pong->ball, &ball_hitbox);
