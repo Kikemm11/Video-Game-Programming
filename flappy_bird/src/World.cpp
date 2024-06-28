@@ -148,13 +148,13 @@ void World::update_closing_logs(float dt) noexcept
         for (auto it = logs.begin(); it != logs.end(); ++it)
         { 
 
-        if ((*it)->has_close_attribute() && !(*it)->is_currently_closed() && logs_closed_timer >= Settings::TIME_CLOSED_LOGS)
+        if ((*it)->get_close() && !(*it)->get_currently_closed() && logs_closed_timer >= Settings::TIME_CLOSED_LOGS)
         {
             (*it)->close_gap();
             logs_closed_timer = 0.f;
             
         }
-        else if((*it)->has_close_attribute() && logs_closed_timer >= Settings::TIME_CLOSED_LOGS)
+        else if((*it)->get_close() && logs_closed_timer >= Settings::TIME_CLOSED_LOGS)
         {
             (*it)->open_gap(); 
             logs_closed_timer = 0.f;    

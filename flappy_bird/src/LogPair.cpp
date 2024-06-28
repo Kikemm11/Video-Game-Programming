@@ -71,7 +71,7 @@ void LogPair::set_close() noexcept
     close = true;
 }
 
-bool LogPair::has_close_attribute() noexcept
+bool LogPair::get_close() noexcept
 {
     return close;
 }
@@ -91,7 +91,7 @@ void LogPair::open_gap() noexcept
     currently_closed = false;
 }
 
-bool LogPair::is_currently_closed() noexcept
+bool LogPair::get_currently_closed() noexcept
 {
     return currently_closed;
 }

@@ -51,8 +51,3 @@ void Log::set_y(float _y) noexcept
 {
     y =  _y;
 }
-
-float Log::get_y() noexcept
-{
-    return y;
-}

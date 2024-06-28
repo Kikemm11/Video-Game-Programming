@@ -32,20 +32,20 @@ public:
 
     void set_close() noexcept;
 
-    bool has_close_attribute() noexcept;
+    bool get_close() noexcept;
 
     void close_gap() noexcept;
 
     void open_gap() noexcept;
 
-    bool is_currently_closed() noexcept;
+    bool get_currently_closed() noexcept;
 
 private:
     float x;
     float y;
     Log top;
     Log bottom;
-    bool close;
+    bool close{false};
     bool currently_closed{false};
     bool scored{false};
 };
