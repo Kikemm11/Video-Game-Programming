@@ -16,7 +16,7 @@ StateMachine::StateMachine(const std::initializer_list<std::pair<std::string, St
 
 }
 
-void StateMachine::change_state(const std::string& state_name, std::string from_state, std::shared_ptr<World> world, std::shared_ptr<Bird> bird) noexcept
+void StateMachine::change_state(const std::string& state_name, std::string from_state, std::shared_ptr<World> world, std::shared_ptr<Bird> bird, std::shared_ptr<GameMode> game_mode) noexcept
 {
     auto it = states.find(state_name);
 
@@ -27,7 +27,7 @@ void StateMachine::change_state(const std::string& state_name, std::string from_
 
     current_state->exit();
     current_state = it->second(this);
-    current_state->enter(world, bird, from_state);
+    current_state->enter(world, bird, from_state, game_mode);
 }
 
 void StateMachine::handle_inputs(const sf::Event& event) noexcept

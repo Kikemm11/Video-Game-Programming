@@ -23,6 +23,10 @@ public:
 
     void render(sf::RenderTarget& target) const noexcept;
 
+    void set_y(float _y) noexcept;
+
+    float get_y() noexcept;
+
 private:
     float x;
     float y;

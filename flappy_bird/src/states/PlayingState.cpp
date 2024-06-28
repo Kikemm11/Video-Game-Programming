@@ -11,6 +11,9 @@
 #include <Settings.hpp>
 #include <src/text_utilities.hpp>
 #include <src/states/StateMachine.hpp>
+#include <src/game_mode/GameMode.hpp>
+#include <src/game_mode/GameModeNormal.hpp>
+#include <src/game_mode/GameModeHard.hpp>
 #include <src/states/PlayingState.hpp>
 
 PlayingState::PlayingState(StateMachine* sm) noexcept
@@ -19,9 +22,10 @@ PlayingState::PlayingState(StateMachine* sm) noexcept
 
 }
 
-void PlayingState::enter(std::shared_ptr<World> _world, std::shared_ptr<Bird> _bird, std::string from_state) noexcept
+void PlayingState::enter(std::shared_ptr<World> _world, std::shared_ptr<Bird> _bird, std::string from_state, std::shared_ptr<GameMode> _game_mode) noexcept
 {
     world = _world;
+    game_mode = _game_mode;
     
     if (from_state != "pause")
     {
@@ -58,11 +62,20 @@ void PlayingState::handle_inputs(const sf::Event& event) noexcept
     {
         bird->jump();
     }
+    if (event.key.code == sf::Keyboard::D)
+    {
+        bird->set_vx_direction(1.f);
+    }
+    if (event.key.code == sf::Keyboard::S)
+    {
+        bird->set_vx_direction(-1.f);
+    }
     if (event.key.code == sf::Keyboard::Space)
     {
-        state_machine->change_state("pause", "playing", world, bird);
+        state_machine->change_state("pause", "playing", world, bird, game_mode);
         return;
     }
+    
 }
 
 void PlayingState::update(float dt) noexcept
@@ -70,11 +83,14 @@ void PlayingState::update(float dt) noexcept
     bird->update(dt);
     world->update(dt);
 
+    game_mode->move_bird_x(bird, dt);
+    game_mode->close_log_pairs(world, dt);
+
     if (world->collides(bird->get_collision_rect()))
     {
         Settings::sounds["explosion"].play();
         Settings::sounds["hurt"].play();
-        state_machine->change_state("count_down", "playing", world, bird);
+        state_machine->change_state("count_down", "playing", world, bird, game_mode);
         return;
     }
 

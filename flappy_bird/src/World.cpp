@@ -67,6 +67,8 @@ void World::update(float dt) noexcept
     {
         logs_spawn_timer += dt;
 
+        logs_close_timer += dt;
+
         if (logs_spawn_timer >= Settings::TIME_TO_SPAWN_LOGS)
         {
             logs_spawn_timer = 0.f;
@@ -76,7 +78,17 @@ void World::update(float dt) noexcept
 
             last_log_y = y;
 
-            logs.push_back(log_factory.create(Settings::VIRTUAL_WIDTH, y));
+            auto log_pair = log_factory.create(Settings::VIRTUAL_WIDTH, y);
+
+
+            if (logs_close_timer >= Settings::TIME_TO_CLOSE_LOGS)
+            {
+                log_pair->set_close();
+                logs_close_timer = 0.f;
+            }
+    
+
+            logs.push_back(log_pair);
         }
     }
 
@@ -125,4 +137,29 @@ void World::render(sf::RenderTarget& target) const noexcept
     }
 
     target.draw(ground);
+}
+
+void World::update_closing_logs(float dt) noexcept
+{
+    logs_closed_timer += dt;
+    
+    if (!logs.empty())
+    {
+        for (auto it = logs.begin(); it != logs.end(); ++it)
+        { 
+
+        if ((*it)->has_close_attribute() && !(*it)->is_currently_closed() && logs_closed_timer >= Settings::TIME_CLOSED_LOGS)
+        {
+            (*it)->close_gap();
+            logs_closed_timer = 0.f;
+            
+        }
+        else if((*it)->has_close_attribute() && logs_closed_timer >= Settings::TIME_CLOSED_LOGS)
+        {
+            (*it)->open_gap(); 
+            logs_closed_timer = 0.f;    
+        }
+        }
+
+    }
 }

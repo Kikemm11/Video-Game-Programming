@@ -30,11 +30,22 @@ public:
 
     void reset(float _x, float _y) noexcept;
 
+    void set_close() noexcept;
+
+    bool has_close_attribute() noexcept;
+
+    void close_gap() noexcept;
+
+    void open_gap() noexcept;
+
+    bool is_currently_closed() noexcept;
+
 private:
     float x;
     float y;
     Log top;
     Log bottom;
-
+    bool close;
+    bool currently_closed{false};
     bool scored{false};
 };

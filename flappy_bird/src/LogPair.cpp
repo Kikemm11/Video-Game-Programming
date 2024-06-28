@@ -65,3 +65,33 @@ void LogPair::reset(float _x, float _y) noexcept
     y = _y;
     scored = false;
 }
+
+void LogPair::set_close() noexcept
+{
+    close = true;
+}
+
+bool LogPair::has_close_attribute() noexcept
+{
+    return close;
+}
+
+void LogPair::close_gap() noexcept
+{
+    top.set_y(y + Settings::LOG_HEIGHT + Settings::LOGS_GAP/2);
+    bottom.set_y(y + Settings::LOGS_GAP + Settings::LOG_HEIGHT - Settings::LOGS_GAP/2);
+    Settings::sounds["crash"].play();
+    currently_closed = true;
+}
+
+void LogPair::open_gap() noexcept
+{
+    top.set_y(y + Settings::LOG_HEIGHT);
+    bottom.set_y(y + Settings::LOGS_GAP + Settings::LOG_HEIGHT);
+    currently_closed = false;
+}
+
+bool LogPair::is_currently_closed() noexcept
+{
+    return currently_closed;
+}

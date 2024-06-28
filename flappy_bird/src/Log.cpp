@@ -46,3 +46,13 @@ void Log::render(sf::RenderTarget& target) const noexcept
 {
     target.draw(sprite);
 }
+
+void Log::set_y(float _y) noexcept
+{
+    y =  _y;
+}
+
+float Log::get_y() noexcept
+{
+    return y;
+}

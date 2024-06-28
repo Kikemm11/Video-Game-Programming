@@ -38,6 +38,8 @@ public:
 
     void render(sf::RenderTarget& target) const noexcept;
 
+    void update_closing_logs(float dt) noexcept;
+
     int score{0};
 private:
     bool generate_logs;
@@ -55,5 +57,7 @@ private:
     std::mt19937 rng;
 
     float logs_spawn_timer{0.f};
+    float logs_close_timer{0.f};
+    float logs_closed_timer{0.f};
     float last_log_y{0.f}; 
 };

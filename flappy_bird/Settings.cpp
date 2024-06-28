@@ -119,6 +119,16 @@ void Settings::load_sounds()
     {
         throw std::runtime_error{"Error loading music sounds/marios_way.ogg"};
     }
+
+    if (!buffer.loadFromFile(Settings::SOUNDS_PATH / "crash.wav"))
+    {
+        throw std::runtime_error{"Error loading sound assets/sounds/crash.wav"};
+    }
+
+    result = Settings::sound_buffers.emplace("crash", buffer);
+
+    sound.setBuffer(result.first->second);
+    Settings::sounds["crash"] = sound;
 }
 
 void Settings::load_fonts()

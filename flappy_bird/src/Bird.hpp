@@ -27,6 +27,10 @@ public:
 
     void jump() noexcept;
 
+    void move(float dt) noexcept;
+
+    void set_vx_direction(int direction) noexcept;
+
     void update(float dt) noexcept;
 
     void render(sf::RenderTarget& target) const noexcept;
@@ -37,6 +41,7 @@ private:
     float width;
     float height;
     float vy;
+    float vx;
     sf::Sprite sprite;
     bool jumping{false};
 };

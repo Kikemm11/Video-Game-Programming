@@ -12,6 +12,9 @@
 
 #include <src/World.hpp>
 #include <src/states/BaseState.hpp>
+#include <src/game_mode/GameMode.hpp>
+#include <src/game_mode/GameModeNormal.hpp>
+#include <src/game_mode/GameModeHard.hpp>
 
 class TitleScreenState: public BaseState
 {
@@ -26,4 +29,6 @@ public:
 
 private:
     std::shared_ptr<World> world;
+    std::shared_ptr<GameMode> normal{std::make_shared<GameModeNormal>()};
+    std::shared_ptr<GameMode> hard{std::make_shared<GameModeHard>()};
 };
