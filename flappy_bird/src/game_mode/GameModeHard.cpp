@@ -11,3 +11,7 @@ void GameModeHard::close_log_pairs(std::shared_ptr<World> world, float dt) noexc
     world->update_closing_logs(dt);
 }
 
+void GameModeHard::update_power_up(std::shared_ptr<World> world, std::shared_ptr<Bird> bird, float dt) noexcept
+{
+    world->update_power_up(dt, bird);
+}

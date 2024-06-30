@@ -85,8 +85,9 @@ void PlayingState::update(float dt) noexcept
 
     game_mode->move_bird_x(bird, dt);
     game_mode->close_log_pairs(world, dt);
+    game_mode->update_power_up(world, bird, dt);
 
-    if (world->collides(bird->get_collision_rect()))
+    if (world->collides(bird->get_collision_rect()) && !bird->get_ghost_bird())
     {
         Settings::sounds["explosion"].play();
         Settings::sounds["hurt"].play();

@@ -11,6 +11,8 @@
 #include <Settings.hpp>
 #include <src/World.hpp>
 
+#include <random>
+
 World::World(bool _generate_logs) noexcept
     : generate_logs{_generate_logs}, background{Settings::textures["background"]}, ground{Settings::textures["ground"]},
       logs{}, rng{std::default_random_engine{}()}
@@ -18,6 +20,7 @@ World::World(bool _generate_logs) noexcept
     ground.setPosition(0, Settings::VIRTUAL_HEIGHT - Settings::GROUND_HEIGHT);
     std::uniform_int_distribution<int> dist(0, 80);
     last_log_y = -Settings::LOG_HEIGHT + dist(rng) + 20;
+    
 }
 
 void World::reset(bool _generate_logs) noexcept
@@ -81,9 +84,12 @@ void World::update(float dt) noexcept
             auto log_pair = log_factory.create(Settings::VIRTUAL_WIDTH, y);
 
 
-            if (logs_close_timer >= Settings::TIME_TO_CLOSE_LOGS)
+            if (logs_close_timer >= time_to_close_logs)
             {
                 log_pair->set_close();
+
+                std::uniform_int_distribution<int> dist(1, 15);
+                time_to_close_logs = dist(spawn_rng);
                 logs_close_timer = 0.f;
             }
     
@@ -137,6 +143,11 @@ void World::render(sf::RenderTarget& target) const noexcept
     }
 
     target.draw(ground);
+
+    if (power_up_on_screen)
+    {
+        power_up->render(target);
+    }
 }
 
 void World::update_closing_logs(float dt) noexcept
@@ -162,4 +173,29 @@ void World::update_closing_logs(float dt) noexcept
         }
 
     }
+}
+
+
+ void World::set_power_up_on_screen(bool _set_power_up_on_screen) noexcept
+ {
+    power_up_on_screen = _set_power_up_on_screen;
+ }
+
+
+void World::update_power_up(float dt, std::shared_ptr<Bird> bird) noexcept
+{
+    power_up_timer += dt;
+
+    if (power_up_timer >= Settings::TIME_TO_POWER_UP && !bird->get_ghost_bird())
+    {
+        power_up = std::make_shared<PowerUp>(Settings::VIRTUAL_WIDTH, Settings::VIRTUAL_HEIGHT/2);
+        power_up_timer = 0.f;
+        power_up_on_screen = true;
+    }
+    
+    if (power_up_on_screen)
+    {
+       power_up->update(dt, bird);
+    }
+           
 }

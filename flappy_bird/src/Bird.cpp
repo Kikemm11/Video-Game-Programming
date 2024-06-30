@@ -23,6 +23,7 @@ void Bird::reset(float _x, float _y) noexcept
     y = _y;
     vy = 0.f;
     sprite.setPosition(x, y);
+    ghost_bird = false;
 }
 
 sf::FloatRect Bird::get_collision_rect() const noexcept
@@ -47,6 +48,22 @@ void Bird::move(float dt) noexcept
 void Bird::set_vx_direction(int direction) noexcept
 {
     vx = Settings::BIRD_X_SPEED * direction;
+}
+
+void Bird::set_ghost_bird(bool _ghost_bird) noexcept
+{
+    ghost_bird = _ghost_bird;
+}
+
+bool Bird::get_ghost_bird() noexcept
+{
+    return ghost_bird;
+}
+
+
+void Bird::set_sprite(const sf::Texture& _sprite) noexcept
+{
+    sprite.setTexture(_sprite);
 }
 
 void Bird::update(float dt) noexcept

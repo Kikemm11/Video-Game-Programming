@@ -30,6 +30,8 @@ std::unordered_map<std::string, sf::Font> Settings::fonts{};
 
 sf::Music Settings::music{};
 
+sf::Music Settings::ghost_music{};
+
 void Settings::init()
 {
     Settings::load_textures();
@@ -68,6 +70,20 @@ void Settings::load_textures()
     }
 
     Settings::textures["Log"] = texture;
+
+    if (!texture.loadFromFile(Settings::TEXTURES_PATH / "powerup.png"))
+    {
+        throw std::runtime_error{"Error loading texture assets/graphics/powerup.png"};
+    }
+
+    Settings::textures["powerup"] = texture;
+
+    if (!texture.loadFromFile(Settings::TEXTURES_PATH / "ghost_bird.png"))
+    {
+        throw std::runtime_error{"Error loading texture assets/graphics/ghost_bird.png"};
+    }
+
+    Settings::textures["ghost_bird"] = texture;
 }
 
 void Settings::load_sounds()
@@ -118,6 +134,11 @@ void Settings::load_sounds()
     if (!Settings::music.openFromFile(Settings::SOUNDS_PATH / "marios_way.ogg"))
     {
         throw std::runtime_error{"Error loading music sounds/marios_way.ogg"};
+    }
+
+    if (!Settings::ghost_music.openFromFile(Settings::SOUNDS_PATH / "ghost_sound.wav"))
+    {
+        throw std::runtime_error{"Error loading music sounds/ghost_sound.ogg"};
     }
 
     if (!buffer.loadFromFile(Settings::SOUNDS_PATH / "crash.wav"))

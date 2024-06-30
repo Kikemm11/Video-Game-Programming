@@ -4,7 +4,7 @@ INCLUDE = -I.
 
 BUILD_DIR = build
 
-OBJ_RULES = text_utilities.o Settings.o Game.o Bird.o Log.o LogPair.o World.o StateMachine.o TitleScreenState.o CountDownState.o PlayingState.o PauseState.o GameModeNormal.o GameModeHard.o
+OBJ_RULES = text_utilities.o Settings.o Game.o Bird.o Log.o LogPair.o World.o StateMachine.o TitleScreenState.o CountDownState.o PlayingState.o PauseState.o GameModeNormal.o GameModeHard.o PowerUp.o
 
 LIBS = -lsfml-graphics -lsfml-audio -lsfml-window -lsfml-system $(BUILD_DIR)/*.o
 
@@ -30,6 +30,9 @@ LogPair.o: src/LogPair.cpp src/LogPair.hpp
 	$(CXX) -c $(INCLUDE) $< -o $(BUILD_DIR)/$@
 
 World.o: src/World.cpp src/World.hpp
+	$(CXX) -c $(INCLUDE) $< -o $(BUILD_DIR)/$@
+
+PowerUp.o: src/PowerUp.cpp src/PowerUp.hpp
 	$(CXX) -c $(INCLUDE) $< -o $(BUILD_DIR)/$@
 
 StateMachine.o: src/states/StateMachine.cpp src/states/StateMachine.hpp

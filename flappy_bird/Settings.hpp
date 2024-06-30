@@ -35,6 +35,8 @@ struct Settings
     static constexpr float BIRD_HEIGHT{28.f};
     static constexpr float LOG_WIDTH{70.f};
     static constexpr float LOG_HEIGHT{288.f};
+    static constexpr float POWER_UP_WIDTH{39.f};
+    static constexpr float POWER_UP_HEIGHT{39.f};
     static constexpr float LOGS_GAP{90.f};
     static constexpr float GROUND_HEIGHT{16.f};
     static constexpr float BACKGROUND_LOOPING_POINT{1157.f};
@@ -46,9 +48,13 @@ struct Settings
     static constexpr float TIME_TO_SPAWN_LOGS{1.5f};
     static constexpr float TIME_TO_CLOSE_LOGS{5.f};
     static constexpr float TIME_CLOSED_LOGS{2.5f};
+    static constexpr float TIME_TO_POWER_UP{15.f};
+    static constexpr float TIME_DURING_GHOST_BIRD{7.f};
+    static constexpr float POWER_UP_VY{150.f};
     static constexpr int MEDIUM_TEXT_SIZE{18};
     static constexpr int HUGE_TEXT_SIZE{56};
     static constexpr int FLAPPY_TEXT_SIZE{28};
+    
 
     static std::unordered_map<std::string, sf::Texture> textures;
     static std::unordered_map<std::string, sf::SoundBuffer> sound_buffers;
@@ -56,6 +62,7 @@ struct Settings
     static std::unordered_map<std::string, sf::Font> fonts;
 
     static sf::Music music;
+    static sf::Music ghost_music;
 
     static void init();
 
