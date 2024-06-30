@@ -72,7 +72,13 @@ void Bird::update(float dt) noexcept
 
     if (jumping)
     {
-        Settings::sounds["jump"].play();
+        if (ghost_bird){
+            Settings::sounds["boo"].play();
+        }
+        else{
+            Settings::sounds["jump"].play();
+        }
+        
         vy = -Settings::JUMP_TAKEOFF_SPEED;
         jumping = false;
     }

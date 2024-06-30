@@ -48,6 +48,7 @@ void PowerUp::update(float dt, std::shared_ptr<Bird> bird) noexcept
         Settings::music.pause();
         Settings::ghost_music.setLoop(true);
         Settings::ghost_music.play();
+        
     }
 
     if (bird->get_ghost_bird() && ghost_bird_timer >= Settings::TIME_DURING_GHOST_BIRD)

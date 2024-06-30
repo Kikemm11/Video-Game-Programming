@@ -150,6 +150,18 @@ void Settings::load_sounds()
 
     sound.setBuffer(result.first->second);
     Settings::sounds["crash"] = sound;
+
+    if (!buffer.loadFromFile(Settings::SOUNDS_PATH / "boo_sound.wav"))
+    {
+        throw std::runtime_error{"Error loading sound assets/sounds/boo_sound.wav"};
+    }
+
+    result = Settings::sound_buffers.emplace("boo_sound", buffer);
+
+    sound.setBuffer(result.first->second);
+    Settings::sounds["boo"] = sound;
+
+    
 }
 
 void Settings::load_fonts()
