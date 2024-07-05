@@ -11,10 +11,20 @@
 #include <Settings.hpp>
 #include <src/LogPair.hpp>
 
+float getRandomLogsGap() {
+    static std::random_device rd;  
+    static std::mt19937 gen(rd());
+
+    static std::uniform_real_distribution<float> dist(Settings::MIN_LOGS_GAP, Settings::MAX_LOGS_GAP);
+
+    return dist(gen);
+}
+
+
 LogPair::LogPair(float _x, float _y) noexcept
     : x{_x}, y{_y},
       top{x, y + Settings::LOG_HEIGHT, true},
-      bottom{x, y + Settings::LOGS_GAP + Settings::LOG_HEIGHT, false}
+      bottom{x, y + getRandomLogsGap() + Settings::LOG_HEIGHT, false}
 {
 
 }
