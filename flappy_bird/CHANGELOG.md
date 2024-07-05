@@ -34,6 +34,7 @@
 - Add update_closing_logs method to update all the logpairs which are able to crash using the timer above
 - Add set_power_up_on_screen method to update the value of the powerup_on_screen 
 - Add update_power_up method
+- Add get_Random_Logs_Space method to calculate distance betwen pair of logs pair
 
 ### Logpair
 
@@ -42,6 +43,7 @@
 - Add a getter and a setter for the close attribute
 - Add close_gap and open_gap method to update the y values of the top and bottom logs of the log pair to crash or not
 - Add a getter for the currently_close attribute
+- Add get_Random_Logs_Gap method to calculate the gap betwen pair of logs
 
 ### Log 
 
@@ -49,7 +51,7 @@
 
 ### Settings
 
-- Add constants: BIRD_X_SPEED, TIME_TO_CLOSE_LOGS, TIME_CLOSED_LOGS, TIME_TO_POWER_UP, TIME_DURING_GHOST_BIRD, POWER_UP_VY
+- Add constants: BIRD_X_SPEED, TIME_TO_CLOSE_LOGS, TIME_CLOSED_LOGS, TIME_TO_POWER_UP, TIME_DURING_GHOST_BIRD, POWER_UP_VY, MIN_LOGS_GAP, MAX_LOGS_GAP, MAX_TIME_TO_SPAWN_LOGS, MIN_TIME_TO_SPAWN_LOGS
 - Load the "crash" sound and the ghost_bird sound
 - Load the powerup texture and the ghost_bird texture
 
@@ -87,4 +89,8 @@
 ## LogPair
 
 - Update the update method to set randomly some pairlogs with the close attribute true (Crash)
+- Change LOGS_GAP constant for get_Random_Logs_Gap in the constructor
+
+## World
+-Change TIME_TO_SPAWN_LOGS constant for get_Random_Logs_Space in the update method
 
