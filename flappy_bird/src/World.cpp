@@ -64,6 +64,15 @@ bool World::update_scored(const sf::FloatRect& rect) noexcept
     return false;
 }
 
+float get_Random_Logs_Space() {
+    static std::random_device rd;  
+    static std::mt19937 gen(rd());
+
+    static std::uniform_real_distribution<float> dist(Settings::MIN_TIME_TO_SPAWN_LOGS, Settings::MAX_TIME_TO_SPAWN_LOGS);
+
+    return dist(gen);
+}
+
 void World::update(float dt) noexcept
 {
     if (generate_logs)
@@ -72,7 +81,7 @@ void World::update(float dt) noexcept
 
         logs_close_timer += dt;
 
-        if (logs_spawn_timer >= Settings::TIME_TO_SPAWN_LOGS)
+        if (logs_spawn_timer >= get_Random_Logs_Space())
         {
             logs_spawn_timer = 0.f;
 
