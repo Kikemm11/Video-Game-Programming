@@ -11,7 +11,7 @@
 #include <Settings.hpp>
 #include <src/LogPair.hpp>
 
-float getRandomLogsGap() {
+float get_Random_Logs_Gap() {
     static std::random_device rd;  
     static std::mt19937 gen(rd());
 
@@ -24,7 +24,7 @@ float getRandomLogsGap() {
 LogPair::LogPair(float _x, float _y) noexcept
     : x{_x}, y{_y},
       top{x, y + Settings::LOG_HEIGHT, true},
-      bottom{x, y + getRandomLogsGap() + Settings::LOG_HEIGHT, false}
+      bottom{x, y + get_Random_Logs_Gap() + Settings::LOG_HEIGHT, false}
 {
 
 }
