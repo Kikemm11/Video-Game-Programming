@@ -12,7 +12,7 @@
 #include <src/LogPair.hpp>
 
 float get_Random_Logs_Gap() {
-    static std::random_device rd;  
+    static std::default_random_engine rd;  
     static std::mt19937 gen(rd());
 
     static std::uniform_real_distribution<float> dist(Settings::MIN_LOGS_GAP, Settings::MAX_LOGS_GAP);

@@ -55,11 +55,11 @@ struct Settings
     static constexpr int HUGE_TEXT_SIZE{56};
     static constexpr int FLAPPY_TEXT_SIZE{28};
 
-    static constexpr float MIN_LOGS_GAP{70.f};
-    static constexpr float MAX_LOGS_GAP{100.f};
+    static constexpr float MIN_LOGS_GAP{76.f};
+    static constexpr float MAX_LOGS_GAP{90.f};
 
     static constexpr float MAX_TIME_TO_SPAWN_LOGS{8.5f};
-    static constexpr float MIN_TIME_TO_SPAWN_LOGS{1.5f};
+    static constexpr float MIN_TIME_TO_SPAWN_LOGS{1.f};
     
 
     static std::unordered_map<std::string, sf::Texture> textures;

@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <random>
+
 #include <src/Bird.hpp>
 #include <src/Log.hpp>
 

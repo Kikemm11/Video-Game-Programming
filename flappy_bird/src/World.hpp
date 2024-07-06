@@ -63,7 +63,7 @@ private:
 
     std::mt19937 rng;
 
-    std::random_device rd;
+    std::default_random_engine rd;
     std::mt19937 spawn_rng{(rd())};
 
     float logs_spawn_timer{0.f};

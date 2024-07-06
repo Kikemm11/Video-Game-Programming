@@ -65,7 +65,7 @@ bool World::update_scored(const sf::FloatRect& rect) noexcept
 }
 
 float get_Random_Logs_Space() {
-    static std::random_device rd;  
+    static std::default_random_engine rd;  
     static std::mt19937 gen(rd());
 
     static std::uniform_real_distribution<float> dist(Settings::MIN_TIME_TO_SPAWN_LOGS, Settings::MAX_TIME_TO_SPAWN_LOGS);
