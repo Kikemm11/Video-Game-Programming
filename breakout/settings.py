@@ -73,6 +73,7 @@ SOUNDS = {
     "life": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "life.wav"),
     "grow_up": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "grow_up.wav"),
     "pause": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "pause.wav"),
+    "shot": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "shot.wav"),
 }
 
 TEXTURES = {
@@ -82,6 +83,9 @@ TEXTURES = {
     "spritesheet": pygame.image.load(BASE_DIR / "assets" / "textures" / "breakout.png"),
     "hearts": pygame.image.load(BASE_DIR / "assets" / "textures" / "hearts.png"),
     "arrows": pygame.image.load(BASE_DIR / "assets" / "textures" / "arrows.png"),
+    "cannon_left": pygame.image.load(BASE_DIR / "assets" / "textures" / "cannon_left.png"),
+    "cannon_right": pygame.image.load(BASE_DIR / "assets" / "textures" / "cannon_right.png"),
+    "bullet": pygame.image.load(BASE_DIR / "assets" / "textures" / "bullet.png"),
 }
 
 FRAMES = {
@@ -91,6 +95,9 @@ FRAMES = {
     "hearts": generate_frames(TEXTURES["hearts"], 10, 9),
     "arrows": generate_frames(TEXTURES["arrows"], 24, 24),
     "powerups": generate_powerups_frames(),
+    "cannon_left": generate_frames(TEXTURES["cannon_left"], 16, 20),
+    "cannon_right": generate_frames(TEXTURES["cannon_right"], 16, 20),
+    "bullet": generate_frames(TEXTURES["bullet"], 16, 20),
 }
 
 pygame.font.init()
