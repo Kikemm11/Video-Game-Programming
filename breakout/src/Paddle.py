@@ -31,6 +31,9 @@ class Paddle:
 
         # The paddle only move horizontally
         self.vx = 0
+        
+        # Active canons
+        self.cannons = False
 
     def resize(self, size: int) -> None:
         self.size = size
@@ -44,7 +47,13 @@ class Paddle:
 
     def get_collision_rect(self) -> pygame.Rect:
         return pygame.Rect(self.x, self.y, self.width, self.height)
-
+      
+    def get_cannons(self) -> None:
+        self.cannons = True
+    
+    def leave_cannons(self) -> None:
+        self.cannons = False
+        
     def update(self, dt: float) -> None:
         next_x = self.x + self.vx * dt
 
@@ -55,3 +64,7 @@ class Paddle:
 
     def render(self, surface: pygame.Surface) -> None:
         surface.blit(self.texture, (self.x, self.y), self.frames[self.skin][self.size])
+        
+        if self.cannons:
+            surface.blit(settings.TEXTURES["cannon_left"], (self.x - settings.CANNON_WIDTH, self.y), settings.FRAMES["cannon_left"][0])
+            surface.blit(settings.TEXTURES["cannon_right"], (self.x + self.width, self.y), settings.FRAMES["cannon_right"][0])

@@ -17,8 +17,11 @@ from gale.state import BaseState
 from gale.input_handler import InputData
 from gale.text import render_text
 
+
 import settings
 import src.powerups
+
+from src.powerups.CannonFire import CannonFire, Bullet, BulletPair
 
 
 class PlayState(BaseState):
@@ -36,6 +39,9 @@ class PlayState(BaseState):
             + settings.PADDLE_GROW_UP_POINTS * (self.paddle.size + 1) * self.level
         )
         self.powerups = params.get("powerups", [])
+        
+        self.bullets = params.get("bullets", [])
+        self.cannon_fire_timer = 0
 
         if not params.get("resume", False):
             self.balls[0].vx = random.randint(-80, 80)
@@ -46,6 +52,7 @@ class PlayState(BaseState):
 
     def update(self, dt: float) -> None:
         self.paddle.update(dt)
+        self.cannon_fire_timer += dt
 
         for ball in self.balls:
             ball.update(dt)
@@ -91,6 +98,15 @@ class PlayState(BaseState):
                 r = brick.get_collision_rect()
                 self.powerups.append(
                     self.powerups_abstract_factory.get_factory("TwoMoreBall").create(
+                        r.centerx - 8, r.centery - 8
+                    )
+                )
+                
+            # Chance to generate two more balls
+            if random.random() < 0.075:
+                r = brick.get_collision_rect()
+                self.powerups.append(
+                    self.powerups_abstract_factory.get_factory("CannonFire").create(
                         r.centerx - 8, r.centery - 8
                     )
                 )
@@ -141,6 +157,78 @@ class PlayState(BaseState):
                 points_to_next_live=self.points_to_next_live,
                 live_factor=self.live_factor,
             )
+        
+
+        for bullet in self.bullets:
+            
+            bullet.update(dt)
+            bullet.solve_world_boundaries()
+            
+            # Check collision with brickset
+            
+            if not bullet.left_bullet.collides(self.brickset) and bullet.right_bullet.collides(self.brickset) :
+                continue
+            
+            bricks = []
+            
+            if bullet.left_bullet.collides(self.brickset) and bullet.left_bullet.active:
+                brick = self.brickset.get_colliding_brick(bullet.left_bullet.get_collision_rect())
+                bricks.append(brick)
+                bullet.left_bullet.active = brick == None 
+                
+            if bullet.right_bullet.collides(self.brickset) and bullet.right_bullet.active:
+                brick = self.brickset.get_colliding_brick(bullet.right_bullet.get_collision_rect())
+                bricks.append(brick)
+                bullet.right_bullet.active = brick == None 
+
+            for brick in bricks:
+                
+                if brick is None:
+                    continue
+                    
+                brick.hit()
+                self.score += brick.score()
+                ball.rebound(brick)
+
+                # Check earn life
+                if self.score >= self.points_to_next_live:
+                    settings.SOUNDS["life"].play()
+                    self.lives = min(3, self.lives + 1)
+                    self.live_factor += 0.5
+                    self.points_to_next_live += settings.LIVE_POINTS_BASE * self.live_factor
+
+                # Check growing up of the paddle
+                if self.score >= self.points_to_next_grow_up:
+                    settings.SOUNDS["grow_up"].play()
+                    self.points_to_next_grow_up += (
+                        settings.PADDLE_GROW_UP_POINTS * (self.paddle.size + 1) * self.level
+                    )
+                    self.paddle.inc_size()
+
+                # Chance to generate two more balls
+                if random.random() < 0.1:
+                    r = brick.get_collision_rect()
+                    self.powerups.append(
+                        self.powerups_abstract_factory.get_factory("TwoMoreBall").create(
+                            r.centerx - 8, r.centery - 8
+                        )
+                    )
+                
+                # Chance to generate two more balls
+                if random.random() < 0.075:
+                    r = brick.get_collision_rect()
+                    self.powerups.append(
+                        self.powerups_abstract_factory.get_factory("CannonFire").create(
+                            r.centerx - 8, r.centery - 8
+                        )
+                    )
+                    
+                    
+        self.bullets= [bullet for bullet in self.bullets if bullet.left_bullet.active or bullet.right_bullet.active]           
+                    
+        if self.paddle.cannons and self.cannon_fire_timer >= settings.CANNON_FIRE:
+            self.paddle.leave_cannons()
+            
 
     def render(self, surface: pygame.Surface) -> None:
         heart_x = settings.VIRTUAL_WIDTH - 120
@@ -174,6 +262,9 @@ class PlayState(BaseState):
         self.brickset.render(surface)
 
         self.paddle.render(surface)
+        
+        for bullet in self.bullets:
+            bullet.render(surface)
 
         for ball in self.balls:
             ball.render(surface)
@@ -204,4 +295,10 @@ class PlayState(BaseState):
                 points_to_next_live=self.points_to_next_live,
                 live_factor=self.live_factor,
                 powerups=self.powerups,
+                bullets=self.bullets
             )
+        elif input_id == "shot" and self.paddle.cannons:
+            if self.bullets == []:
+                self.bullets.append(BulletPair(self.paddle))
+            
+            

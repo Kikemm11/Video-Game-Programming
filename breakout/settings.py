@@ -30,6 +30,7 @@ input_handler.InputHandler.set_keyboard_action(input_handler.KEY_UP, "move_up")
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_RIGHT, "move_right")
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_DOWN, "move_down")
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_LEFT, "move_left")
+input_handler.InputHandler.set_keyboard_action(input_handler.KEY_f, "shot")
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_SPACE, "pause")
 
 # Size of our actual window
@@ -50,6 +51,18 @@ LIVE_POINTS_BASE = 2000
 PADDLE_GROW_UP_POINTS = 200
 
 POWERUP_SPEED = 50
+
+# Bullet properties
+BULLET_WIDTH_HEIGHT = 12
+BULLET_SPEED = -75
+
+# Cannons properties
+CANNON_WIDTH = 16
+CANNON_HEIGHT = 20
+
+# CannonFire time
+
+CANNON_FIRE = 15
 
 BASE_DIR = Path(__file__).parent
 
@@ -97,7 +110,7 @@ FRAMES = {
     "powerups": generate_powerups_frames(),
     "cannon_left": generate_frames(TEXTURES["cannon_left"], 16, 20),
     "cannon_right": generate_frames(TEXTURES["cannon_right"], 16, 20),
-    "bullet": generate_frames(TEXTURES["bullet"], 16, 20),
+    "bullet": generate_frames(TEXTURES["bullet"], 12, 12),
 }
 
 pygame.font.init()
