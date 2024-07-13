@@ -54,7 +54,7 @@ POWERUP_SPEED = 50
 
 # Bullet properties
 BULLET_WIDTH_HEIGHT = 12
-BULLET_SPEED = -75
+BULLET_SPEED = -100  
 
 # Cannons properties
 CANNON_WIDTH = 16
@@ -63,6 +63,12 @@ CANNON_HEIGHT = 20
 # CannonFire time
 
 CANNON_FIRE = 15
+
+# Dust shield properties
+
+DUST_SHIELD_WIDTH = 432
+DUST_SHIELD_HEIGHT = 21
+DUST_SHIELD = 15
 
 BASE_DIR = Path(__file__).parent
 
@@ -99,6 +105,7 @@ TEXTURES = {
     "cannon_left": pygame.image.load(BASE_DIR / "assets" / "textures" / "cannon_left.png"),
     "cannon_right": pygame.image.load(BASE_DIR / "assets" / "textures" / "cannon_right.png"),
     "bullet": pygame.image.load(BASE_DIR / "assets" / "textures" / "bullet.png"),
+    "dust_shield": pygame.image.load(BASE_DIR / "assets" / "textures" / "dust_shield.png"),
 }
 
 FRAMES = {
@@ -108,9 +115,10 @@ FRAMES = {
     "hearts": generate_frames(TEXTURES["hearts"], 10, 9),
     "arrows": generate_frames(TEXTURES["arrows"], 24, 24),
     "powerups": generate_powerups_frames(),
-    "cannon_left": generate_frames(TEXTURES["cannon_left"], 16, 20),
-    "cannon_right": generate_frames(TEXTURES["cannon_right"], 16, 20),
-    "bullet": generate_frames(TEXTURES["bullet"], 12, 12),
+    "cannon_left": generate_frames(TEXTURES["cannon_left"], CANNON_WIDTH, CANNON_HEIGHT),
+    "cannon_right": generate_frames(TEXTURES["cannon_right"], CANNON_WIDTH, CANNON_HEIGHT),
+    "bullet": generate_frames(TEXTURES["bullet"], BULLET_WIDTH_HEIGHT, BULLET_WIDTH_HEIGHT),
+    "dust_shield": generate_frames(TEXTURES["dust_shield"], DUST_SHIELD_WIDTH, DUST_SHIELD_HEIGHT),
 }
 
 pygame.font.init()

@@ -30,6 +30,7 @@ class Ball:
         self.texture = settings.TEXTURES["spritesheet"]
         self.frame = random.randint(0, 6)
         self.active = True
+        self.shield = False
 
     def get_collision_rect(self) -> pygame.Rect:
         return pygame.Rect(self.x, self.y, self.width, self.height)
@@ -51,6 +52,11 @@ class Ball:
             settings.SOUNDS["wall_hit"].stop()
             settings.SOUNDS["wall_hit"].play()
             self.y = 0
+            self.vy *= -1
+        elif self.shield and r.bottom >= settings.VIRTUAL_HEIGHT - settings.DUST_SHIELD_HEIGHT:
+            settings.SOUNDS["wall_hit"].stop()
+            settings.SOUNDS["wall_hit"].play()
+            self.y = settings.VIRTUAL_HEIGHT - settings.DUST_SHIELD_HEIGHT - self.height
             self.vy *= -1
         elif r.top > settings.VIRTUAL_HEIGHT:
             settings.SOUNDS["hurt"].play()

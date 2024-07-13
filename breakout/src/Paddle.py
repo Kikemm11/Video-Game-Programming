@@ -33,7 +33,7 @@ class Paddle:
         self.vx = 0
         
         # Active canons
-        self.cannons = False
+        self.cannons = True
 
     def resize(self, size: int) -> None:
         self.size = size
@@ -46,6 +46,10 @@ class Paddle:
         self.resize(min(3, self.size + 1))
 
     def get_collision_rect(self) -> pygame.Rect:
+        
+        if self.cannons:
+            return pygame.Rect(self.x - settings.CANNON_WIDTH, self.y, self.width + (2*settings.CANNON_WIDTH), self.height)
+    
         return pygame.Rect(self.x, self.y, self.width, self.height)
       
     def get_cannons(self) -> None:
@@ -66,5 +70,5 @@ class Paddle:
         surface.blit(self.texture, (self.x, self.y), self.frames[self.skin][self.size])
         
         if self.cannons:
-            surface.blit(settings.TEXTURES["cannon_left"], (self.x - settings.CANNON_WIDTH, self.y), settings.FRAMES["cannon_left"][0])
-            surface.blit(settings.TEXTURES["cannon_right"], (self.x + self.width, self.y), settings.FRAMES["cannon_right"][0])
+            surface.blit(settings.TEXTURES["cannon_left"], (self.x - settings.CANNON_WIDTH, self.y-4), settings.FRAMES["cannon_left"][0])
+            surface.blit(settings.TEXTURES["cannon_right"], (self.x + self.width, self.y-4), settings.FRAMES["cannon_right"][0])

@@ -22,6 +22,7 @@ import settings
 import src.powerups
 
 from src.powerups.CannonFire import CannonFire, Bullet, BulletPair
+from src.powerups.DustShield import Shield
 
 
 class PlayState(BaseState):
@@ -42,6 +43,9 @@ class PlayState(BaseState):
         
         self.bullets = params.get("bullets", [])
         self.cannon_fire_timer = 0
+        
+        self.shield = params.get("shield", Shield())
+        self.dust_shield_timer = 0
 
         if not params.get("resume", False):
             self.balls[0].vx = random.randint(-80, 80)
@@ -53,6 +57,7 @@ class PlayState(BaseState):
     def update(self, dt: float) -> None:
         self.paddle.update(dt)
         self.cannon_fire_timer += dt
+        self.dust_shield_timer += dt
 
         for ball in self.balls:
             ball.update(dt)
@@ -102,11 +107,20 @@ class PlayState(BaseState):
                     )
                 )
                 
-            # Chance to generate two more balls
+            # Chance to generate cannon fire
+                if random.random() < 0.075:
+                    r = brick.get_collision_rect()
+                    self.powerups.append(
+                        self.powerups_abstract_factory.get_factory("CannonFire").create(
+                            r.centerx - 8, r.centery - 8
+                        )
+                    )
+                    
+            # Chance to generate dust shield
             if random.random() < 0.075:
                 r = brick.get_collision_rect()
                 self.powerups.append(
-                    self.powerups_abstract_factory.get_factory("CannonFire").create(
+                    self.powerups_abstract_factory.get_factory("DustShield").create(
                         r.centerx - 8, r.centery - 8
                     )
                 )
@@ -214,11 +228,20 @@ class PlayState(BaseState):
                         )
                     )
                 
-                # Chance to generate two more balls
+                # Chance to generate cannon fire
                 if random.random() < 0.075:
                     r = brick.get_collision_rect()
                     self.powerups.append(
                         self.powerups_abstract_factory.get_factory("CannonFire").create(
+                            r.centerx - 8, r.centery - 8
+                        )
+                    )
+                    
+                # Chance to generate dust shield
+                if random.random() < 0.075:
+                    r = brick.get_collision_rect()
+                    self.powerups.append(
+                        self.powerups_abstract_factory.get_factory("DustShield").create(
                             r.centerx - 8, r.centery - 8
                         )
                     )
@@ -228,6 +251,13 @@ class PlayState(BaseState):
                     
         if self.paddle.cannons and self.cannon_fire_timer >= settings.CANNON_FIRE:
             self.paddle.leave_cannons()
+            
+        if self.shield.active and self.dust_shield_timer >= settings.DUST_SHIELD:
+            
+            self.shield.active = False
+            
+            for ball in self.balls:
+                ball.shield = False
             
 
     def render(self, surface: pygame.Surface) -> None:
@@ -260,11 +290,15 @@ class PlayState(BaseState):
         )
 
         self.brickset.render(surface)
+        
+        self.shield.render(surface)
 
         self.paddle.render(surface)
         
         for bullet in self.bullets:
             bullet.render(surface)
+            
+        
 
         for ball in self.balls:
             ball.render(surface)
@@ -295,7 +329,8 @@ class PlayState(BaseState):
                 points_to_next_live=self.points_to_next_live,
                 live_factor=self.live_factor,
                 powerups=self.powerups,
-                bullets=self.bullets
+                bullets=self.bullets,
+                shield=self.shield
             )
         elif input_id == "shot" and self.paddle.cannons:
             if self.bullets == []:

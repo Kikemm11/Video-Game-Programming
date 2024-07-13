@@ -11,5 +11,6 @@ This module contains all of the power ups.
 from src.powerups.PowerUp import PowerUp
 from src.powerups.TwoMoreBall import TwoMoreBall
 from src.powerups.CannonFire import CannonFire 
+from src.powerups.DustShield import DustShield
 
-(PowerUp, TwoMoreBall, CannonFire)
+(PowerUp, TwoMoreBall, CannonFire, DustShield)
