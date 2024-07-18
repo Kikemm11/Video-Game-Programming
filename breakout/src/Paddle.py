@@ -33,7 +33,7 @@ class Paddle:
         self.vx = 0
         
         # Active canons
-        self.cannons = True
+        self.cannons = False
 
     def resize(self, size: int) -> None:
         self.size = size
