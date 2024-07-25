@@ -45,11 +45,10 @@ class PlayState(BaseState):
         
         self.shuffle = False
 
-        #self.timer = settings.LEVEL_TIME
-        self.timer = 100
+        self.timer = settings.LEVEL_TIME
 
-        #self.goal_score = self.level * 1.25 * 1000
-        self.goal_score = 10000000000
+        self.goal_score = self.level * 1.25 * 1000
+    
 
         # A surface that supports alpha to highlight a selected tile
         self.tile_alpha_surface = pygame.Surface(
@@ -183,12 +182,9 @@ class PlayState(BaseState):
             return
 
         if input_id == "mouse_motion_left" and self.tile_clicked:
-            
-            pos_x, pos_y = input_data.position
-            pos_x = pos_x * settings.VIRTUAL_WIDTH // settings.WINDOW_WIDTH
-            pos_y = pos_y * settings.VIRTUAL_HEIGHT // settings.WINDOW_HEIGHT
+            pass
     
-              
+     
         if input_id == "click" and input_data.pressed:
           
             pos_x, pos_y = input_data.position
@@ -215,25 +211,13 @@ class PlayState(BaseState):
 
                     if di <= 1 and dj <= 1 and di != dj:
                         self.active = False
-                        """
-                        self.tile1 = self.board.tiles[self.highlighted_i1][
-                            self.highlighted_j1
-                        ]
-                        """
+
                         self.tile2 = self.board.tiles[self.highlighted_i2][
                             self.highlighted_j2
                         ]
 
                         def arrive():
                             
-                            """
-                            self.tile1 = self.board.tiles[self.highlighted_i1][
-                                self.highlighted_j1
-                            ]
-                            self.tile2 = self.board.tiles[self.highlighted_i2][
-                                self.highlighted_j2
-                            ]
-                            """
                             (
                                 self.board.tiles[self.tile1.i][self.tile1.j],
                                 self.board.tiles[self.tile2.i][self.tile2.j],
