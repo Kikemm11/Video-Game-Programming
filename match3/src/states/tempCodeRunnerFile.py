@@ -1,0 +1,1 @@
+self.timer = settings.LEVEL_TIME

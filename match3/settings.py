@@ -24,6 +24,7 @@ input_handler.InputHandler.set_keyboard_action(input_handler.KEY_RETURN, "enter"
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_UP, "up")
 input_handler.InputHandler.set_keyboard_action(input_handler.KEY_DOWN, "down")
 input_handler.InputHandler.set_mouse_click_action(input_handler.MOUSE_BUTTON_1, "click")
+input_handler.InputHandler.set_mouse_motion_action(input_handler.MOUSE_MOTION_LEFT, "left")
 
 WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
@@ -42,7 +43,8 @@ NUM_COLORS = 18
 BACKGROUND_SCROLL_SPEED = 40
 BACKGROUND_LOOPING_POINT = -1024 + VIRTUAL_WIDTH - 4 + 51
 
-LEVEL_TIME = 60
+#LEVEL_TIME = 60
+LEVEL_TIME =10000
 
 BASE_DIR = Path(__file__).parent
 
@@ -64,6 +66,8 @@ SOUNDS = {
     "match": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "match.wav"),
     "next-level": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "next-level.wav"),
     "select": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "select.wav"),
+    "shuffle": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "shuffle.wav"),
+    "wrong": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "wrong.wav"),
 }
 
 pygame.mixer.music.load(BASE_DIR / "assets" / "sounds" / "music.mp3")

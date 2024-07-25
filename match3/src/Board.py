@@ -132,7 +132,8 @@ class Board:
         return match
 
     def calculate_matches_for(
-        self, new_tiles: List[Tile]
+        self, new_tiles: List[Tile],
+        **params
     ) -> Optional[List[List[Tile]]]:
         self.in_match: Set[Tile] = set()
         self.in_stack: Set[Tile] = set()
@@ -146,7 +147,11 @@ class Board:
 
         delattr(self, "in_match")
         delattr(self, "in_stack")
-
+        
+        if params.get('all'):
+            matches = self.matches if len(self.matches) > 0 else None
+            self.matches = []
+            return matches
         return self.matches if len(self.matches) > 0 else None
 
     def remove_matches(self) -> None:
@@ -208,3 +213,54 @@ class Board:
                     tweens.append((tile, {"y": tile.i * settings.TILE_SIZE}))
 
         return tweens
+    
+    
+    def calculate_board_matches(self, tiles: List):
+        
+        for tile in tiles:
+            
+            #Check top
+            
+            if tile.i > 0:
+                
+                (self.tiles[tile.i][tile.j].color, self.tiles[tile.i - 1][tile.j].color) = (self.tiles[tile.i - 1][tile.j].color, self.tiles[tile.i][tile.j].color)
+                
+                matches_list = self.calculate_matches_for([self.tiles[tile.i - 1][tile.j]], all=True)
+                if matches_list != None:
+                    (self.tiles[tile.i][tile.j].color, self.tiles[tile.i - 1][tile.j].color) = (self.tiles[tile.i - 1][tile.j].color, self.tiles[tile.i][tile.j].color)
+                    return True
+                
+            #Check left
+            
+            if tile.j > 0:
+                
+                (self.tiles[tile.i][tile.j].color, self.tiles[tile.i][tile.j - 1].color) = (self.tiles[tile.i][tile.j - 1].color, self.tiles[tile.i][tile.j].color)
+                
+                matches_list = self.calculate_matches_for([self.tiles[tile.i][tile.j - 1]], all=True)
+                if matches_list != None:
+                    (self.tiles[tile.i][tile.j].color, self.tiles[tile.i][tile.j - 1].color) = (self.tiles[tile.i][tile.j - 1].color, self.tiles[tile.i][tile.j].color)
+                    return True
+                
+            #Check right
+            
+            if tile.j < settings.BOARD_WIDTH - 1:
+                
+                (self.tiles[tile.i][tile.j].color, self.tiles[tile.i][tile.j + 1].color) = (self.tiles[tile.i][tile.j + 1].color, self.tiles[tile.i][tile.j].color)
+                
+                matches_list = self.calculate_matches_for([self.tiles[tile.i][tile.j  + 1]], all=True)
+                if matches_list != None:
+                    (self.tiles[tile.i][tile.j].color, self.tiles[tile.i][tile.j + 1].color) = (self.tiles[tile.i][tile.j + 1].color, self.tiles[tile.i][tile.j].color)
+                    return True
+                
+            #Check bottom
+            
+            if tile.i < settings.BOARD_HEIGHT - 1:
+                
+                (self.tiles[tile.i][tile.j].color, self.tiles[tile.i + 1][tile.j].color) = (self.tiles[tile.i + 1][tile.j].color, self.tiles[tile.i][tile.j].color)
+                
+                matches_list = self.calculate_matches_for([self.tiles[tile.i + 1][tile.j]], all=True)
+                if matches_list != None:
+                    (self.tiles[tile.i][tile.j].color, self.tiles[tile.i + 1][tile.j].color) = (self.tiles[tile.i + 1][tile.j].color, self.tiles[tile.i][tile.j].color)
+                    return True
+                                 
+        return False

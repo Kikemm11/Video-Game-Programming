@@ -19,6 +19,9 @@ from gale.timer import Timer
 
 import settings
 
+from src.Board import Board
+import time
+
 
 class PlayState(BaseState):
     def enter(self, **enter_params: Dict[str, Any]) -> None:
@@ -35,10 +38,18 @@ class PlayState(BaseState):
         self.highlighted_tile = False
 
         self.active = True
+        self.tile_clicked = False
+        
+        self.tile1 = None
+        self.tile2 = None
+        
+        self.shuffle = False
 
-        self.timer = settings.LEVEL_TIME
+        #self.timer = settings.LEVEL_TIME
+        self.timer = 100
 
-        self.goal_score = self.level * 1.25 * 1000
+        #self.goal_score = self.level * 1.25 * 1000
+        self.goal_score = 10000000000
 
         # A surface that supports alpha to highlight a selected tile
         self.tile_alpha_surface = pygame.Surface(
@@ -65,6 +76,16 @@ class PlayState(BaseState):
                 settings.SOUNDS["clock"].play()
 
         Timer.every(1, decrement_timer)
+        
+        
+        board_matches = [tile for row in self.board.tiles for tile in row]
+        
+        possible_matches = self.board.calculate_board_matches(board_matches)
+        
+        if not possible_matches:
+            settings.SOUNDS["shuffle"].stop()
+            settings.SOUNDS["shuffle"].play()
+            self.shuffle = True
 
     def update(self, _: float) -> None:
         if self.timer <= 0:
@@ -76,9 +97,42 @@ class PlayState(BaseState):
             Timer.clear()
             settings.SOUNDS["next-level"].play()
             self.state_machine.change("begin", level=self.level + 1, score=self.score)
+    
+        if self.shuffle:
+            self.shuffle = False
+            self.board = Board(settings.VIRTUAL_WIDTH - 272, 16)
+            
+            board_matches = [tile for row in self.board.tiles for tile in row]
+        
+            possible_matches = self.board.calculate_board_matches(board_matches)
+
+            if not possible_matches:
+                settings.SOUNDS["shuffle"].stop()
+                settings.SOUNDS["shuffle"].play()
+                self.shuffle = True
+            
+            
+            
 
     def render(self, surface: pygame.Surface) -> None:
+        
+        if self.shuffle:
+            
+            render_text(
+            surface,
+            f"Shuffle",
+            settings.FONTS["huge"],
+            settings.VIRTUAL_HEIGHT//2,
+            settings.VIRTUAL_WIDTH // 2,
+            (99, 155, 255),
+            shadowed=True,
+            )
+            time.sleep(1.5)
+            
+        
         self.board.render(surface)
+        
+        
 
         if self.highlighted_tile:
             x = self.highlighted_j1 * settings.TILE_SIZE + self.board.x
@@ -124,21 +178,35 @@ class PlayState(BaseState):
         )
 
     def on_input(self, input_id: str, input_data: InputData) -> None:
+        
         if not self.active:
             return
 
+        if input_id == "mouse_motion_left" and self.tile_clicked:
+            
+            pos_x, pos_y = input_data.position
+            pos_x = pos_x * settings.VIRTUAL_WIDTH // settings.WINDOW_WIDTH
+            pos_y = pos_y * settings.VIRTUAL_HEIGHT // settings.WINDOW_HEIGHT
+    
+              
         if input_id == "click" and input_data.pressed:
+          
             pos_x, pos_y = input_data.position
             pos_x = pos_x * settings.VIRTUAL_WIDTH // settings.WINDOW_WIDTH
             pos_y = pos_y * settings.VIRTUAL_HEIGHT // settings.WINDOW_HEIGHT
             i = (pos_y - self.board.y) // settings.TILE_SIZE
             j = (pos_x - self.board.x) // settings.TILE_SIZE
-
             if 0 <= i < settings.BOARD_HEIGHT and 0 <= j < settings.BOARD_WIDTH:
                 if not self.highlighted_tile:
                     self.highlighted_tile = True
+                    self.tile_clicked = True
                     self.highlighted_i1 = i
                     self.highlighted_j1 = j
+                    
+                    self.tile1 = self.board.tiles[self.highlighted_i1][
+                            self.highlighted_j1
+                        ]
+                    
                 else:
                     self.highlighted_i2 = i
                     self.highlighted_j2 = j
@@ -147,52 +215,89 @@ class PlayState(BaseState):
 
                     if di <= 1 and dj <= 1 and di != dj:
                         self.active = False
-                        tile1 = self.board.tiles[self.highlighted_i1][
+                        """
+                        self.tile1 = self.board.tiles[self.highlighted_i1][
                             self.highlighted_j1
                         ]
-                        tile2 = self.board.tiles[self.highlighted_i2][
+                        """
+                        self.tile2 = self.board.tiles[self.highlighted_i2][
                             self.highlighted_j2
                         ]
 
                         def arrive():
-                            tile1 = self.board.tiles[self.highlighted_i1][
+                            
+                            """
+                            self.tile1 = self.board.tiles[self.highlighted_i1][
                                 self.highlighted_j1
                             ]
-                            tile2 = self.board.tiles[self.highlighted_i2][
+                            self.tile2 = self.board.tiles[self.highlighted_i2][
                                 self.highlighted_j2
                             ]
+                            """
                             (
-                                self.board.tiles[tile1.i][tile1.j],
-                                self.board.tiles[tile2.i][tile2.j],
+                                self.board.tiles[self.tile1.i][self.tile1.j],
+                                self.board.tiles[self.tile2.i][self.tile2.j],
                             ) = (
-                                self.board.tiles[tile2.i][tile2.j],
-                                self.board.tiles[tile1.i][tile1.j],
+                                self.board.tiles[self.tile2.i][self.tile2.j],
+                                self.board.tiles[self.tile1.i][self.tile1.j],
                             )
-                            tile1.i, tile1.j, tile2.i, tile2.j = (
-                                tile2.i,
-                                tile2.j,
-                                tile1.i,
-                                tile1.j,
+                            self.tile1.i, self.tile1.j, self.tile2.i, self.tile2.j = (
+                                self.tile2.i,
+                                self.tile2.j,
+                                self.tile1.i,
+                                self.tile1.j,
                             )
-                            self.__calculate_matches([tile1, tile2])
+                            self.__calculate_matches([self.tile1, self.tile2])
 
                         # Swap tiles
                         Timer.tween(
                             0.25,
                             [
-                                (tile1, {"x": tile2.x, "y": tile2.y}),
-                                (tile2, {"x": tile1.x, "y": tile1.y}),
+                                (self.tile1, {"x": self.tile2.x, "y": self.tile2.y}),
+                                (self.tile2, {"x": self.tile1.x, "y": self.tile1.y}),
                             ],
                             on_finish=arrive,
                         )
 
                     self.highlighted_tile = False
+                    self.tile_clicked = False
 
-    def __calculate_matches(self, tiles: List) -> None:
+    def __calculate_matches(self, tiles: List, **params: Dict[str, Any]) -> None:
         matches = self.board.calculate_matches_for(tiles)
 
         if matches is None:
             self.active = True
+            
+            settings.SOUNDS["wrong"].stop()
+            settings.SOUNDS["wrong"].play()
+            
+            def reverse():
+                (
+                    self.board.tiles[self.tile1.i][self.tile1.j],
+                    self.board.tiles[self.tile2.i][self.tile2.j],
+                ) = (
+                    self.board.tiles[self.tile2.i][self.tile2.j],
+                    self.board.tiles[self.tile1.i][self.tile1.j],
+                )
+                self.tile1.i, self.tile1.j, self.tile2.i, self.tile2.j = (
+                    self.tile2.i,
+                    self.tile2.j,
+                    self.tile1.i,
+                    self.tile1.j,
+                )
+                
+                
+            if not params.get('falling_tiles'):
+            
+                Timer.tween(
+                                0.25,
+                                [
+                                    (self.tile1, {"x": self.tile2.x, "y": self.tile2.y}),
+                                    (self.tile2, {"x": self.tile1.x, "y": self.tile1.y}),
+                                ],
+                                on_finish=reverse,
+                            )
+                
             return
 
         settings.SOUNDS["match"].stop()
@@ -209,6 +314,17 @@ class PlayState(BaseState):
             0.25,
             falling_tiles,
             on_finish=lambda: self.__calculate_matches(
-                [item[0] for item in falling_tiles]
+                [item[0] for item in falling_tiles],
+                falling_tiles=True
             ),
         )
+          
+        board_matches = [tile for row in self.board.tiles for tile in row]
+        
+        possible_matches = self.board.calculate_board_matches(board_matches)
+        
+        if not possible_matches:
+            settings.SOUNDS["shuffle"].stop()
+            settings.SOUNDS["shuffle"].play()
+            self.shuffle = True
+        
