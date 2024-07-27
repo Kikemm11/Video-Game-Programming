@@ -126,7 +126,7 @@ class PlayState(BaseState):
             (99, 155, 255),
             shadowed=True,
             )
-            time.sleep(1.5)
+            
             
         
         self.board.render(surface)

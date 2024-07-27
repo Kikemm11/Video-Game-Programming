@@ -221,13 +221,16 @@ class Board:
             
             #Check top
             
+            print(f"Current tile: ( {tile.i} , {tile.j} )")
+            
             if tile.i > 0:
                 
                 (self.tiles[tile.i][tile.j].color, self.tiles[tile.i - 1][tile.j].color) = (self.tiles[tile.i - 1][tile.j].color, self.tiles[tile.i][tile.j].color)
                 
                 matches_list = self.calculate_matches_for([self.tiles[tile.i - 1][tile.j]], all=True)
+                (self.tiles[tile.i][tile.j].color, self.tiles[tile.i - 1][tile.j].color) = (self.tiles[tile.i - 1][tile.j].color, self.tiles[tile.i][tile.j].color)
                 if matches_list != None:
-                    (self.tiles[tile.i][tile.j].color, self.tiles[tile.i - 1][tile.j].color) = (self.tiles[tile.i - 1][tile.j].color, self.tiles[tile.i][tile.j].color)
+                    print(f"Move: ( {tile.i - 1} , {tile.j} )")
                     return True
                 
             #Check left
@@ -237,8 +240,9 @@ class Board:
                 (self.tiles[tile.i][tile.j].color, self.tiles[tile.i][tile.j - 1].color) = (self.tiles[tile.i][tile.j - 1].color, self.tiles[tile.i][tile.j].color)
                 
                 matches_list = self.calculate_matches_for([self.tiles[tile.i][tile.j - 1]], all=True)
+                (self.tiles[tile.i][tile.j].color, self.tiles[tile.i][tile.j - 1].color) = (self.tiles[tile.i][tile.j - 1].color, self.tiles[tile.i][tile.j].color)
                 if matches_list != None:
-                    (self.tiles[tile.i][tile.j].color, self.tiles[tile.i][tile.j - 1].color) = (self.tiles[tile.i][tile.j - 1].color, self.tiles[tile.i][tile.j].color)
+                    print(f"Move: ( {tile.i} , {tile.j - 1} )")
                     return True
                 
             #Check right
@@ -248,8 +252,9 @@ class Board:
                 (self.tiles[tile.i][tile.j].color, self.tiles[tile.i][tile.j + 1].color) = (self.tiles[tile.i][tile.j + 1].color, self.tiles[tile.i][tile.j].color)
                 
                 matches_list = self.calculate_matches_for([self.tiles[tile.i][tile.j  + 1]], all=True)
+                (self.tiles[tile.i][tile.j].color, self.tiles[tile.i][tile.j + 1].color) = (self.tiles[tile.i][tile.j + 1].color, self.tiles[tile.i][tile.j].color)
                 if matches_list != None:
-                    (self.tiles[tile.i][tile.j].color, self.tiles[tile.i][tile.j + 1].color) = (self.tiles[tile.i][tile.j + 1].color, self.tiles[tile.i][tile.j].color)
+                    print(f"Move: ( {tile.i} , {tile.j + 1} )")
                     return True
                 
             #Check bottom
@@ -259,8 +264,9 @@ class Board:
                 (self.tiles[tile.i][tile.j].color, self.tiles[tile.i + 1][tile.j].color) = (self.tiles[tile.i + 1][tile.j].color, self.tiles[tile.i][tile.j].color)
                 
                 matches_list = self.calculate_matches_for([self.tiles[tile.i + 1][tile.j]], all=True)
+                (self.tiles[tile.i][tile.j].color, self.tiles[tile.i + 1][tile.j].color) = (self.tiles[tile.i + 1][tile.j].color, self.tiles[tile.i][tile.j].color)
                 if matches_list != None:
-                    (self.tiles[tile.i][tile.j].color, self.tiles[tile.i + 1][tile.j].color) = (self.tiles[tile.i + 1][tile.j].color, self.tiles[tile.i][tile.j].color)
+                    print(f"Move: ( {tile.i - 1} , {tile.j} )")
                     return True
                                  
         return False
