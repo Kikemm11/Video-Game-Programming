@@ -240,8 +240,10 @@ class PlayState(BaseState):
         if matches is None:
             self.active = True
             
-            settings.SOUNDS["wrong"].stop()
-            settings.SOUNDS["wrong"].play()
+            if not params.get('falling_tiles'):
+            
+                settings.SOUNDS["wrong"].stop()
+                settings.SOUNDS["wrong"].play()
             
             def reverse():
                 (

@@ -138,7 +138,7 @@ class PlayState(BaseState):
                     )
                     
             # Chance to generate dust shield
-            if random.random() < 0.075:
+            if random.random() < 0.2:
                 r = brick.get_collision_rect()
                 self.powerups.append(
                     self.powerups_abstract_factory.get_factory("DustShield").create(
@@ -146,7 +146,7 @@ class PlayState(BaseState):
                     )
                 )
 
-            if random.random() < 0.50:
+            if random.random() < 0.075:
                 r = brick.get_collision_rect()
                 self.powerups.append(
                     self.powerups_abstract_factory.get_factory("StickyPaddle").create(
@@ -276,7 +276,7 @@ class PlayState(BaseState):
                     )
 
                 # Chance to generate sticky paddle
-                if random.random() < 0.50:
+                if random.random() < 0.075:
                     r = brick.get_collision_rect()
                     self.powerups.append(
                         self.powerups_abstract_factory.get_factory("StickyPaddle").create(
