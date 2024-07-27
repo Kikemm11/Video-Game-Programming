@@ -70,6 +70,8 @@ DUST_SHIELD_WIDTH = 432
 DUST_SHIELD_HEIGHT = 21
 DUST_SHIELD = 15
 
+STICKY_TIME = 3 
+
 BASE_DIR = Path(__file__).parent
 
 pygame.mixer.init()

@@ -76,10 +76,9 @@ class PlayState(BaseState):
 
             # Check collision with the paddle
             if ball.collides(self.paddle):
-                settings.SOUNDS["paddle_hit"].stop()
-                settings.SOUNDS["paddle_hit"].play()
                 
                 if self.sticky.active:
+                    
                     self.stuck_balls.append([ball, (self.paddle.x - ball.x)])
                     
                     for boll in self.stuck_balls:
@@ -87,6 +86,8 @@ class PlayState(BaseState):
                         boll[0].vy = 0
                     
                 else:
+                    settings.SOUNDS["paddle_hit"].stop()
+                    settings.SOUNDS["paddle_hit"].play()
                     ball.rebound(self.paddle)
                     ball.push(self.paddle)
 
@@ -145,7 +146,7 @@ class PlayState(BaseState):
                     )
                 )
 
-            if random.random() < 0.2:
+            if random.random() < 0.50:
                 r = brick.get_collision_rect()
                 self.powerups.append(
                     self.powerups_abstract_factory.get_factory("StickyPaddle").create(
@@ -275,7 +276,7 @@ class PlayState(BaseState):
                     )
 
                 # Chance to generate sticky paddle
-                if random.random() < 0.075:
+                if random.random() < 0.50:
                     r = brick.get_collision_rect()
                     self.powerups.append(
                         self.powerups_abstract_factory.get_factory("StickyPaddle").create(
@@ -301,7 +302,7 @@ class PlayState(BaseState):
             for boll in self.stuck_balls:
                 boll[0].vx = randint(-80, 80)
                 boll[0].vy = randint(-170, -100)
-                boll[0].x = self.paddle.x 
+                #boll[0].x = self.paddle.x 
             self.stuck_balls = []
             self.sticky.active = False
             

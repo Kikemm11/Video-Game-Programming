@@ -14,4 +14,4 @@ from src.powerups.CannonFire import CannonFire
 from src.powerups.DustShield import DustShield
 from src.powerups.StickyPaddle import StickyPaddle
 
-(PowerUp, TwoMoreBall, CannonFire, DustShield)
+(PowerUp, TwoMoreBall, CannonFire, DustShield, StickyPaddle)
