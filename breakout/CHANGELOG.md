@@ -23,6 +23,7 @@
 
 - Add the CannonFire.py file which contains all the logic related to it in the classes CannonFire, Bullet and BulletPair
 - Add the DustShield.py file wich contains all the logic related to it in the classes DustShield and Shield
+- Add the StickyPaddle.py file wich contains all the logic related to it in the classes StickyPaddle and Sticky
 
 ### /src/Paddle.py
 
@@ -39,6 +40,7 @@
 - Add the float attribute cannon_fire_timer to manage the limit time for the CannonFire powerup to be active
 - Add the new Shield shield attribute to storage an instance of a shield object 
 - Add the float attribute dust_shield_timer to manage the limit time for the DustShield powerup to be active
+- Add the stick_balls list, to count how many balls are stick to the paddle
  
 
 
@@ -59,6 +61,7 @@
 - Change the render method to render the bullets in case they exists and they are still active
 - Change the render method to render the shield if necessary
 - Change the on_input method to shot the bullets in case the powerup is still active
+  
 
  
 
