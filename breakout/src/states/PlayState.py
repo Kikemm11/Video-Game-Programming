@@ -16,6 +16,7 @@ from gale.factory import AbstractFactory
 from gale.state import BaseState
 from gale.input_handler import InputData
 from gale.text import render_text
+from random import randint
 
 
 import settings
@@ -23,6 +24,7 @@ import src.powerups
 
 from src.powerups.CannonFire import CannonFire, Bullet, BulletPair
 from src.powerups.DustShield import Shield
+from src.powerups.StickyPaddle import Sticky
 
 
 class PlayState(BaseState):
@@ -35,6 +37,7 @@ class PlayState(BaseState):
         self.brickset = params["brickset"]
         self.live_factor = params["live_factor"]
         self.points_to_next_live = params["points_to_next_live"]
+        self.stuck_balls = []
         self.points_to_next_grow_up = (
             self.score
             + settings.PADDLE_GROW_UP_POINTS * (self.paddle.size + 1) * self.level
@@ -47,6 +50,9 @@ class PlayState(BaseState):
         self.shield = params.get("shield", Shield())
         self.dust_shield_timer = 0
 
+        self.sticky = params.get("sticky", Sticky())
+        self.sticky_timer = 0
+
         if not params.get("resume", False):
             self.balls[0].vx = random.randint(-80, 80)
             self.balls[0].vy = random.randint(-170, -100)
@@ -58,7 +64,12 @@ class PlayState(BaseState):
         self.paddle.update(dt)
         self.cannon_fire_timer += dt
         self.dust_shield_timer += dt
+        self.sticky_timer += dt
 
+        for boll in self.stuck_balls:
+            boll[0].x = self.paddle.x - boll[1] 
+        
+        
         for ball in self.balls:
             ball.update(dt)
             ball.solve_world_boundaries()
@@ -67,8 +78,17 @@ class PlayState(BaseState):
             if ball.collides(self.paddle):
                 settings.SOUNDS["paddle_hit"].stop()
                 settings.SOUNDS["paddle_hit"].play()
-                ball.rebound(self.paddle)
-                ball.push(self.paddle)
+                
+                if self.sticky.active:
+                    self.stuck_balls.append([ball, (self.paddle.x - ball.x)])
+                    
+                    for boll in self.stuck_balls:
+                        boll[0].vx = 0
+                        boll[0].vy = 0
+                    
+                else:
+                    ball.rebound(self.paddle)
+                    ball.push(self.paddle)
 
             # Check collision with brickset
             if not ball.collides(self.brickset):
@@ -121,6 +141,14 @@ class PlayState(BaseState):
                 r = brick.get_collision_rect()
                 self.powerups.append(
                     self.powerups_abstract_factory.get_factory("DustShield").create(
+                        r.centerx - 8, r.centery - 8
+                    )
+                )
+
+            if random.random() < 0.2:
+                r = brick.get_collision_rect()
+                self.powerups.append(
+                    self.powerups_abstract_factory.get_factory("StickyPaddle").create(
                         r.centerx - 8, r.centery - 8
                     )
                 )
@@ -245,6 +273,16 @@ class PlayState(BaseState):
                             r.centerx - 8, r.centery - 8
                         )
                     )
+
+                # Chance to generate sticky paddle
+                if random.random() < 0.075:
+                    r = brick.get_collision_rect()
+                    self.powerups.append(
+                        self.powerups_abstract_factory.get_factory("StickyPaddle").create(
+                            r.centerx - 8, r.centery - 8
+                        )
+                    )
+
                     
                     
         self.bullets= [bullet for bullet in self.bullets if bullet.left_bullet.active or bullet.right_bullet.active]           
@@ -258,6 +296,14 @@ class PlayState(BaseState):
             
             for ball in self.balls:
                 ball.shield = False
+
+        if self.sticky.active and self.sticky_timer >= settings.STICKY_TIME:
+            for boll in self.stuck_balls:
+                boll[0].vx = randint(-80, 80)
+                boll[0].vy = randint(-170, -100)
+                boll[0].x = self.paddle.x 
+            self.stuck_balls = []
+            self.sticky.active = False
             
 
     def render(self, surface: pygame.Surface) -> None:
@@ -330,10 +376,18 @@ class PlayState(BaseState):
                 live_factor=self.live_factor,
                 powerups=self.powerups,
                 bullets=self.bullets,
-                shield=self.shield
+                shield=self.shield,
+                sticky = self.sticky
             )
         elif input_id == "shot" and self.paddle.cannons:
             if self.bullets == []:
                 self.bullets.append(BulletPair(self.paddle))
+        elif input_id == "shot" and self.sticky.active:
+            if self.stuck_balls:
+                for ball in self.stuck_balls:
+                    ball[0].vx = randint(-80, 80)
+                    ball[0].vy = randint(-170, -100)
+                self.stuck_balls = []
+                self.sticky.active = False
             
             

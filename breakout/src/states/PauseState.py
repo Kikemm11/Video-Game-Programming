@@ -20,6 +20,7 @@ class PauseState(BaseState):
         self.powerups = params["powerups"]
         self.bullets = params["bullets"]
         self.shield = params["shield"]
+        self.sticky = params["sticky"]
         settings.SOUNDS["pause"].play()
 
     def render(self, surface: pygame.Surface) -> None:
@@ -84,5 +85,6 @@ class PauseState(BaseState):
                 powerups=self.powerups,
                 bullets=self.bullets,
                 shield=self.shield,
+                sticky= self.sticky,
                 resume=True,
             )
