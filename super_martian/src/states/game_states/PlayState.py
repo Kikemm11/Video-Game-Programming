@@ -22,6 +22,8 @@ from src.Camera import Camera
 from src.Clock import Clock
 from src.GameLevel import GameLevel
 from src.Player import Player
+from src.Key import Key
+from gale.timer import Timer
 
 
 class PlayState(BaseState):
@@ -35,6 +37,7 @@ class PlayState(BaseState):
             )
             pygame.mixer.music.play(loops=-1)
 
+    
         self.tilemap = self.game_level.tilemap
         self.player = enter_params.get("player")
         if self.player is None:
@@ -51,7 +54,7 @@ class PlayState(BaseState):
         self.clock = enter_params.get("clock")
 
         if self.clock is None:
-            self.clock = Clock(30)
+            self.clock = Clock(60)
 
             def countdown_timer():
                 self.clock.count_down()
@@ -65,7 +68,10 @@ class PlayState(BaseState):
             Timer.every(1, countdown_timer)
         else:
             Timer.resume()
-
+            
+        self.key = None
+        self.key_active = False
+        
     def update(self, dt: float) -> None:
         if self.player.is_dead:
             pygame.mixer.music.stop()
@@ -86,20 +92,51 @@ class PlayState(BaseState):
             if self.player.collides(creature):
                 self.player.change_state("dead")
 
+
+        if self.player.score >= 50 and not self.key_active:
+            self.key = Key()
+            self.key_active = True
+            
+            
+        if self.key and self.key.collides(self.player):
+            print("Collide")
+            
+            if self.key.consumable:
+                print("Grabbed")
+                self.key = None
+                
+            else:
+            
+                self.key.consumable = True
+                
+                Timer.tween(
+                            1.75,
+                            [
+                                (self.key, {"x": self.key.x, "y": settings.KEY_Y - 2 * settings.KEY_HEIGHT}),
+                            ],
+                            on_finish=None,
+                            )
+            
         for item in self.game_level.items:
             if not item.active or not item.collidable:
                 continue
-
+            
             if self.player.collides(item):
                 item.on_collide(self.player)
                 item.on_consume(self.player)
 
     def render(self, surface: pygame.Surface) -> None:
-        world_surface = pygame.Surface((self.tilemap.width, self.tilemap.height))
+        world_surface = pygame.Surface((self.tilemap.width, self.tilemap.height))    
         self.game_level.render(world_surface)
         self.player.render(world_surface)
+        
+        if self.player.score >= 50 and self.key:
+            
+            self.key.render(world_surface)
+            
+            
         surface.blit(world_surface, (-self.camera.x, -self.camera.y))
-
+        
         render_text(
             surface,
             f"Score: {self.player.score}",

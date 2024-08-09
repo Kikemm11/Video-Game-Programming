@@ -35,8 +35,8 @@ VIRTUAL_WIDTH = 400
 VIRTUAL_HEIGHT = 192
 
 # Size of our actual window
-WINDOW_WIDTH = VIRTUAL_WIDTH * 4
-WINDOW_HEIGHT = VIRTUAL_HEIGHT * 4
+WINDOW_WIDTH = VIRTUAL_WIDTH * 4 - 350
+WINDOW_HEIGHT = VIRTUAL_HEIGHT * 4 - 100
 
 PLAYER_SPEED = 80
 
@@ -48,16 +48,25 @@ BASE_DIR = pathlib.Path(__file__).parent
 
 LevelLoader = loaders.TmxLevelLoader
 
+#Key properties
+
+KEY_X = 496
+KEY_Y = 64
+KEY_WIDTH = 16
+KEY_HEIGHT = 16
+
 TEXTURES = {
     "tiles": pygame.image.load(BASE_DIR / "assets" / "textures" / "tileset.png"),
     "martian": pygame.image.load(BASE_DIR / "assets" / "textures" / "martian.png"),
     "creatures": pygame.image.load(BASE_DIR / "assets" / "textures" / "creatures.png"),
+    "key": pygame.image.load(BASE_DIR / "assets" / "textures" / "key.png"),
 }
 
 FRAMES = {
     "tiles": frames.generate_frames(TEXTURES["tiles"], 16, 16),
     "martian": frames.generate_frames(TEXTURES["martian"], 16, 20),
     "creatures": frames.generate_frames(TEXTURES["creatures"], 16, 16),
+    "key": frames.generate_frames(TEXTURES["creatures"], 35, 35),
 }
 
 TILEMAPS = {

@@ -15,6 +15,8 @@ from gale.input_handler import InputData
 from src.GameEntity import GameEntity
 from src.states.entities import player_states
 
+import pygame
+
 
 class Player(GameEntity):
     def __init__(self, x: int, y: int, game_level: TypeVar("GameLevel")) -> None:
@@ -43,3 +45,6 @@ class Player(GameEntity):
 
     def on_input(self, input_id: str, input_data: InputData) -> None:
         self.state_machine.on_input(input_id, input_data)
+
+    def get_collision_rect(self) -> pygame.Rect:
+        return pygame.Rect(self.x, self.y, self.width, self.height)
