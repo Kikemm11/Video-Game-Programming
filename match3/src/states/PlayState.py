@@ -250,11 +250,11 @@ class PlayState(BaseState):
                         self.board.matches.append(vertical_neighbors)
                         self.board.matches.append([self.tile1])
                         
-                        settings.SOUNDS["match"].stop()
-                        settings.SOUNDS["match"].play()
+                        settings.SOUNDS["match_4"].stop()
+                        settings.SOUNDS["match_4"].play()
                         
                         for match in self.board.matches:
-                            self.score += len(match) * 10
+                            self.score += len(match) * 2
                         
                         self.board.remove_matches()
                         
@@ -284,11 +284,11 @@ class PlayState(BaseState):
                                 
                         self.board.matches.append(same_color)
                         
-                        settings.SOUNDS["match"].stop()
-                        settings.SOUNDS["match"].play()
+                        settings.SOUNDS["match_5"].stop()
+                        settings.SOUNDS["match_5"].play()
                         
                         for match in self.board.matches:
-                            self.score += len(match) * 10
+                            self.score += len(match) * 2
                             
                         
                         self.board.remove_matches()

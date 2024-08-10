@@ -70,6 +70,8 @@ SOUNDS = {
     "select": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "select.wav"),
     "shuffle": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "shuffle.wav"),
     "wrong": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "wrong.wav"),
+    "match_4": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "match_4.wav"),
+    "match_5": pygame.mixer.Sound(BASE_DIR / "assets" / "sounds" / "match_5.wav"),
 }
 
 pygame.mixer.music.load(BASE_DIR / "assets" / "sounds" / "music.mp3")
