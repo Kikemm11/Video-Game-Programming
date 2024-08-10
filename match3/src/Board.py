@@ -63,8 +63,8 @@ class Board:
                     color = random.randint(0, settings.NUM_COLORS - 1)
 
                 self.tiles[i][j] = Tile(
-                    i, j, color, random.randint(0, settings.NUM_VARIETIES - 1)
-                )
+                    i, j, color, 0)
+                
 
     def __calculate_match_rec(self, tile: Tile) -> Set[Tile]:
         if tile in self.in_stack:
@@ -212,7 +212,7 @@ class Board:
                         i,
                         j,
                         random.randint(0, settings.NUM_COLORS - 1),
-                        random.randint(0, settings.NUM_VARIETIES - 1),
+                        0
                     )
                     tile.y -= settings.TILE_SIZE
                     self.tiles[i][j] = tile

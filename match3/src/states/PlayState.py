@@ -229,8 +229,90 @@ class PlayState(BaseState):
                         ]
                     self.tile1_x = self.tile1.x
                     self.tile1_y = self.tile1.y
+                    
+                    
+                    if self.tile1.match_4:
+                        
+                        horizontal_neighbors = []
+                        vertical_neighbors = []
+                        
+                        for j in range(0,8):
+                            if j != self.tile1.j:
+                                horizontal_neighbors.append(self.board.tiles[self.tile1.i][j])
+                                self.board.tiles[self.tile1.i][j].variety = 1
+                        
+                        for i in range(0,8):
+                            if i != self.tile1.i:
+                                vertical_neighbors.append(self.board.tiles[i][self.tile1.j])
+                                self.board.tiles[i][self.tile1.j].variety = 1
+                                
+                        self.board.matches.append(horizontal_neighbors)
+                        self.board.matches.append(vertical_neighbors)
+                        self.board.matches.append([self.tile1])
+                        
+                        settings.SOUNDS["match"].stop()
+                        settings.SOUNDS["match"].play()
+                        
+                        for match in self.board.matches:
+                            self.score += len(match) * 10
+                        
+                        self.board.remove_matches()
+                        
+                        falling_tiles = self.board.get_falling_tiles()
+
+                        Timer.tween(
+                            0.25,
+                            falling_tiles,
+                            on_finish=lambda: self.__calculate_matches(
+                                [item[0] for item in falling_tiles],
+                                falling_tiles=True
+                            ),
+                        )
+                        
+                        self.highlighted_tile = False
+                        self.tile_clicked = False
+                        
+                         
+                    if self.tile1.match_5:
+                        
+                        same_color = []
+                        board_tiles = [tile for row in self.board.tiles for tile in row]
+                        
+                        for tile in board_tiles:
+                            if tile.color == self.tile1.color:
+                                same_color.append(tile)
+                                
+                        self.board.matches.append(same_color)
+                        
+                        settings.SOUNDS["match"].stop()
+                        settings.SOUNDS["match"].play()
+                        
+                        for match in self.board.matches:
+                            self.score += len(match) * 10
+                            
+                        
+                        self.board.remove_matches()
+                        
+                        falling_tiles = self.board.get_falling_tiles()
+
+                        Timer.tween(
+                            0.25,
+                            falling_tiles,
+                            on_finish=lambda: self.__calculate_matches(
+                                [item[0] for item in falling_tiles],
+                                falling_tiles=True
+                            ),
+                        )
+                        
+                        self.highlighted_tile = False
+                        self.tile_clicked = False
+                              
                 else:
                     self.highlighted_tile = False
+                    
+                
+            
+            
                     
                     
 
@@ -279,7 +361,21 @@ class PlayState(BaseState):
 
         for match in matches:
             self.score += len(match) * 50
-
+            
+            if len(match) == 4:
+                self.tile1.match_4 = True
+                self.tile1.variety = 1
+                for tile in match:
+                    if tile == self.tile1:
+                        match.remove(tile)
+                        
+            if len(match) >= 5:
+                self.tile1.match_5 = True
+                self.tile1.variety = 5
+                for tile in match:
+                    if tile == self.tile1:
+                        match.remove(tile)
+            
         self.board.remove_matches()
 
         falling_tiles = self.board.get_falling_tiles()
