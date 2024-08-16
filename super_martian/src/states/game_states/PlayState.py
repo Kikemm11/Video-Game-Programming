@@ -96,7 +96,7 @@ class PlayState(BaseState):
                 self.player.change_state("dead")
 
 
-        if self.player.score >= 50 and not self.key_active:
+        if self.player.score >= 100 and not self.key_active and self.level == 1:
             self.key = Key()
             self.key_active = True
             
@@ -145,7 +145,7 @@ class PlayState(BaseState):
         self.game_level.render(world_surface)
         self.player.render(world_surface)
         
-        if self.player.score >= 50 and self.key:
+        if self.player.score >= 100 and self.key and self.level == 1:
             
             self.key.render(world_surface)
                         
