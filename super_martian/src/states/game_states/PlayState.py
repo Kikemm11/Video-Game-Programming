@@ -32,11 +32,12 @@ class PlayState(BaseState):
         self.game_level = enter_params.get("game_level")
         if self.game_level is None:
             self.game_level = GameLevel(self.level)
-            pygame.mixer.music.load(
-                settings.BASE_DIR / "assets" / "sounds" / "music_grassland.ogg"
-            )
-            pygame.mixer.music.play(loops=-1)
-
+        
+        pygame.mixer.music.load(
+            settings.BASE_DIR / "assets" / "sounds" / "music_grassland.ogg"
+        )
+        pygame.mixer.music.play(loops=-1)
+        
     
         self.tilemap = self.game_level.tilemap
         self.player = enter_params.get("player")
@@ -71,6 +72,8 @@ class PlayState(BaseState):
             
         self.key = None
         self.key_active = False
+        self.level_passed = False
+        self.alpha_transition = 0
         
     def update(self, dt: float) -> None:
         if self.player.is_dead:
@@ -93,7 +96,7 @@ class PlayState(BaseState):
                 self.player.change_state("dead")
 
 
-        if self.player.score >= 100 and not self.key_active:
+        if self.player.score >= 50 and not self.key_active:
             self.key = Key()
             self.key_active = True
             
@@ -102,6 +105,15 @@ class PlayState(BaseState):
             
             if self.key.consumable:
                 self.key = None
+                self.level_passed = True
+                
+                Timer.tween(
+                1,
+                [(self, {"alpha_transition": 255})],
+                on_finish=lambda: self.state_machine.change("play", level=2 ),
+                #on_finish=None,
+            )
+                
                 
             else:
             
@@ -114,6 +126,7 @@ class PlayState(BaseState):
                             ],
                             on_finish=None,
                             )
+                
             
         for item in self.game_level.items:
             if not item.active or not item.collidable:
@@ -122,18 +135,22 @@ class PlayState(BaseState):
             if self.player.collides(item):
                 item.on_collide(self.player)
                 item.on_consume(self.player)
+                       
 
     def render(self, surface: pygame.Surface) -> None:
-        world_surface = pygame.Surface((self.tilemap.width, self.tilemap.height))    
+        world_surface = pygame.Surface((self.tilemap.width, self.tilemap.height))
+        self.screen_alpha_surface = pygame.Surface(
+                    (self.tilemap.width, self.tilemap.height), pygame.SRCALPHA
+                )    
         self.game_level.render(world_surface)
         self.player.render(world_surface)
         
-        if self.player.score >= 100 and self.key:
+        if self.player.score >= 50 and self.key:
             
             self.key.render(world_surface)
-            
-            
+                        
         surface.blit(world_surface, (-self.camera.x, -self.camera.y))
+        
         
         render_text(
             surface,
@@ -154,6 +171,14 @@ class PlayState(BaseState):
             (255, 255, 255),
             shadowed=True,
         )
+        
+        pygame.draw.rect(
+                    self.screen_alpha_surface,
+                    (255, 255, 255, self.alpha_transition),
+                    pygame.Rect(0, 0, settings.VIRTUAL_WIDTH, settings.VIRTUAL_HEIGHT),
+                )
+        surface.blit(self.screen_alpha_surface, (0, 0))
+
 
     def on_input(self, input_id: str, input_data: InputData) -> None:
         if input_id == "pause" and input_data.pressed:

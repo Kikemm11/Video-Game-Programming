@@ -42,7 +42,7 @@ PLAYER_SPEED = 80
 
 GRAVITY = 980
 
-NUM_LEVELS = 1
+NUM_LEVELS = 2
 
 BASE_DIR = pathlib.Path(__file__).parent
 

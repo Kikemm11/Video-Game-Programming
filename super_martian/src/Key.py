@@ -17,6 +17,7 @@ class Key():
         self.texture = settings.TEXTURES["key"]
         self.frame = settings.FRAMES["key"][0]
         self.consumable = False
+        self.grabbed = False
         
     
     def get_collision_rect(self) -> pygame.Rect:
