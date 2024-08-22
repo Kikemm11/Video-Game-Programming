@@ -15,6 +15,9 @@ function Room:init(player)
     -- reference to player for collisions, etc.
     self.player = player
 
+    self.activeBoss = False
+    self:generateBoss()
+    
     self.width = MAP_WIDTH
     self.height = MAP_HEIGHT
 
@@ -24,6 +27,7 @@ function Room:init(player)
     -- entities in the room
     self.entities = {}
     self:generateEntities()
+    
 
     -- game objects in the room
     self.objects = {}
@@ -53,6 +57,26 @@ function Room:update(dt)
     if self.adjacentOffsetX ~= 0 or self.adjacentOffsetY ~= 0 then return end
 
     self.player:update(dt)
+
+    if self.boss then
+
+        if self.boss.health <= 0 then
+            self.boss.dead = true            
+        elseif not self.boss.dead then
+            self.boss:processAI({room = self}, dt)
+            self.boss:update(dt)
+        end
+
+        if not self.boss.dead and self.player:collides(self.boss) and not self.player.invulnerable and not self.boss.paralized then
+            SOUNDS['hit-player']:play()
+            self.player:damage(2)
+            self.player:goInvulnerable(1.5)
+
+            if self.player.health == 0 then
+                stateMachine:change('game-over')
+            end
+        end
+    end
 
     for i = #self.entities, 1, -1 do
         local entity = self.entities[i]
@@ -136,6 +160,14 @@ function Room:update(dt)
             end
         end
 
+        if self.boss and not self.boss.dead and projectile:collides(self.boss) then
+            self.boss:damage(1)
+            SOUNDS['hit-enemy']:play()
+            projectile.dead = true
+            projectile.obj.used = true
+            self.boss.paralized = true
+        end
+
         if projectile.dead then
             table.remove(self.projectiles, k)
         end
@@ -214,6 +246,49 @@ function Room:generateEntities()
 
         self.entities[i]:changeState('walk')
     end
+
+end
+
+
+function Room:generateBoss()
+
+    local boss_x = 0
+    local boss_y = 0
+
+    if self.player.direction == 'up' then 
+        boss_x = MAP_RENDER_OFFSET_X + VIRTUAL_WIDTH / 2 - 21
+        boss_y = MAP_RENDER_OFFSET_Y + TILE_SIZE
+    elseif self.player.direction == 'down' then
+            boss_x = MAP_RENDER_OFFSET_X + VIRTUAL_WIDTH / 2 - 21
+            boss_y = VIRTUAL_HEIGHT - (VIRTUAL_HEIGHT - MAP_HEIGHT * TILE_SIZE) + MAP_RENDER_OFFSET_Y - TILE_SIZE - 42
+    elseif self.player.direction == 'left' then
+            boss_x = MAP_RENDER_OFFSET_X + TILE_SIZE
+            boss_y = MAP_RENDER_OFFSET_Y + VIRTUAL_HEIGHT / 2 - 21
+    else
+            boss_x = VIRTUAL_WIDTH - TILE_SIZE * 2 - 42
+            boss_y = MAP_RENDER_OFFSET_Y + VIRTUAL_HEIGHT / 2 - 21
+    end
+
+    self.boss = Boss {
+        animations = ENTITY_DEFS['dragon'].animations,
+        walkSpeed = ENTITY_DEFS['dragon'].walkSpeed,
+        
+        x = boss_x,
+        y = boss_y,
+        
+        width = 42,
+        height = 42,
+
+        health = 100,
+    }
+
+    self.boss.stateMachine = StateMachine {
+        ['walk'] = function() return BossWalkState(self.boss) end,
+        ['idle'] = function() return BossIdleState(self.boss) end
+    }
+
+    self.boss:changeState('walk')
+
 end
 
 --[[
@@ -342,6 +417,10 @@ function Room:render()
 
     if self.player then
         self.player:render()
+    end
+
+    if self.boss and not self.boss.dead then
+        self.boss:render()
     end
 
     for k, projectile in pairs(self.projectiles) do

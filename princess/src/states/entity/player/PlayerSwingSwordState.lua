@@ -67,6 +67,16 @@ function PlayerSwingSwordState:update(dt)
         end
     end
 
+    if self.dungeon.currentRoom.boss then 
+        local boss = self.dungeon.currentRoom.boss
+
+        if boss:collides(self.swordHitbox) and boss.paralized and not boss.invulnerable then
+            boss:damage(1)
+            boss:goInvulnerable(1.5)
+            SOUNDS['hit-enemy']:play()
+        end
+    end
+
     if self.player.currentAnimation.timesPlayed > 0 then
         self.player.currentAnimation.timesPlayed = 0
         self.player:changeState('idle')
@@ -83,9 +93,9 @@ function PlayerSwingSwordState:render()
         math.floor(self.player.x - self.player.offsetX), math.floor(self.player.y - self.player.offsetY))
 
     -- debug for player and hurtbox collision rects
-    -- love.graphics.setColor(love.math.colorFromBytes(255, 0, 255, 255))
-    -- love.graphics.rectangle('line', self.player.x, self.player.y, self.player.width, self.player.height)
-    -- love.graphics.rectangle('line', self.swordHitbox.x, self.swordHitbox.y,
-    -- self.swordHitbox.width, self.swordHitbox.height)
-    -- love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 255))
+    --love.graphics.setColor(love.math.colorFromBytes(255, 0, 255, 255))
+    --love.graphics.rectangle('line', self.player.x, self.player.y, self.player.width, self.player.height)
+    --love.graphics.rectangle('line', self.swordHitbox.x, self.swordHitbox.y,
+    --self.swordHitbox.width, self.swordHitbox.height)
+    --love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 255))
 end

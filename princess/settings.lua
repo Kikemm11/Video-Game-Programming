@@ -18,6 +18,7 @@ require 'src/Entity'
 require 'src/GameObject'
 require 'src/Hitbox'
 require 'src/Player'
+require 'src/Boss'
 require 'src/Projectile'
 require 'src/StateMachine'
 
@@ -28,6 +29,9 @@ require 'src/states/BaseState'
 
 require 'src/states/entity/EntityIdleState'
 require 'src/states/entity/EntityWalkState'
+
+require 'src/states/entity/boss/BossIdleState'
+require 'src/states/entity/boss/BossWalkState'
 
 require 'src/states/entity/player/PlayerIdleState'
 require 'src/states/entity/player/PlayerSwingSwordState'
@@ -100,7 +104,8 @@ TEXTURES = {
     ['chest'] = love.graphics.newImage('assets/textures/chest.png'),
     ['bow'] = love.graphics.newImage('assets/textures/bow.png'),
     ['horizontal-arrow'] = love.graphics.newImage('assets/textures/horizontal_arrows.png'),
-    ['vertical-arrow'] = love.graphics.newImage('assets/textures/vertical_arrows.png')
+    ['vertical-arrow'] = love.graphics.newImage('assets/textures/vertical_arrows.png'),
+    ['dragon'] = love.graphics.newImage('assets/textures/dragon.png')
 }
 
 FRAMES = {
@@ -116,6 +121,7 @@ FRAMES = {
     ['bow'] = generateQuads(TEXTURES['bow'], 20, 20),
     ['horizontal-arrow'] = generateQuads(TEXTURES['horizontal-arrow'], 10, 5),
     ['vertical-arrow'] = generateQuads(TEXTURES['vertical-arrow'], 5, 10),
+    ['dragon'] = generateQuads(TEXTURES['dragon'], 42, 42),
 }
 
 FONTS = {

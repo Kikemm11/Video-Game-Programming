@@ -303,5 +303,47 @@ ENTITY_DEFS = {
                 frames = {95}
             }
         }
+    },
+    ['dragon'] = {
+        texture = 'dragon',
+        walkSpeed = 60,
+        animations = {
+            ['walk-left'] = {
+                frames = {1, 2, 3, 4},
+                interval = 0.2,
+                texture = 'dragon'
+            },
+            ['walk-right'] = {
+                frames = {5, 6, 7, 8},
+                interval = 0.2,
+                texture = 'dragon'
+            },
+            ['walk-down'] = {
+                frames = {9, 10, 11, 12},
+                interval = 0.2,
+                texture = 'dragon'
+            },
+            ['walk-up'] = {
+                frames = {13, 14, 15, 16},
+                interval = 0.2,
+                texture = 'dragon'
+            },
+            ['idle-left'] = {
+                frames = {1},
+                texture = 'dragon'
+            },
+            ['idle-right'] = {
+                frames = {5},
+                texture = 'dragon'
+            },
+            ['idle-down'] = {
+                frames = {9},
+                texture = 'dragon'
+            },
+            ['idle-up'] = {
+                frames = {13},
+                texture = 'dragon'
+            }
+        }
     }
 }
