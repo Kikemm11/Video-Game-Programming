@@ -96,7 +96,7 @@ GAME_OBJECT_DEFS = {
                 frame = 1
             }
         },
-        onConsume = function(player)
+        onConsume = function(player, object)
             player.activeBow = true
             SOUNDS['heart-taken']:play()
         end

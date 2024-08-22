@@ -245,10 +245,10 @@ function Room:generateObjects()
 
     table.insert(self.objects, GameObject(
         GAME_OBJECT_DEFS['chest'],
-        math.random(MAP_RENDER_OFFSET_X + TILE_SIZE,
-                    VIRTUAL_WIDTH - TILE_SIZE * 2 - 32),
-        math.random(MAP_RENDER_OFFSET_Y + TILE_SIZE,
-                    VIRTUAL_HEIGHT - (VIRTUAL_HEIGHT - MAP_HEIGHT * TILE_SIZE) + MAP_RENDER_OFFSET_Y - TILE_SIZE - 32)
+        math.random(MAP_RENDER_OFFSET_X + TILE_SIZE * 2,
+                    VIRTUAL_WIDTH - TILE_SIZE * 3 - 32),
+        math.random(MAP_RENDER_OFFSET_Y + TILE_SIZE * 2,
+                    VIRTUAL_HEIGHT - (VIRTUAL_HEIGHT - MAP_HEIGHT * TILE_SIZE) + MAP_RENDER_OFFSET_Y - TILE_SIZE * 2 - 32)
     ))
 
     local chest = self.objects[2]
