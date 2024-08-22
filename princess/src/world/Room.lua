@@ -86,6 +86,10 @@ function Room:update(dt)
     for k, object in pairs(self.objects) do
         object:update(dt)
 
+        if object.used then
+            table.remove(self.objects, k)
+        end
+
         -- trigger collision callback on object
         if self.player:collides(object) then
             object:onCollide()
@@ -111,6 +115,7 @@ function Room:update(dt)
                 object.onConsume(self.player, object)
                 table.remove(self.objects, k)
             end
+
         end
     end
 
@@ -127,6 +132,7 @@ function Room:update(dt)
                 entity:damage(1)
                 SOUNDS['hit-enemy']:play()
                 projectile.dead = true
+                projectile.obj.used = true
             end
         end
 
@@ -234,11 +240,49 @@ function Room:generateObjects()
             for k, doorway in pairs(self.doorways) do
                 doorway.open = true
             end
-
-            SOUNDS['door']:play()
         end
     end
 
+    table.insert(self.objects, GameObject(
+        GAME_OBJECT_DEFS['chest'],
+        math.random(MAP_RENDER_OFFSET_X + TILE_SIZE,
+                    VIRTUAL_WIDTH - TILE_SIZE * 2 - 32),
+        math.random(MAP_RENDER_OFFSET_Y + TILE_SIZE,
+                    VIRTUAL_HEIGHT - (VIRTUAL_HEIGHT - MAP_HEIGHT * TILE_SIZE) + MAP_RENDER_OFFSET_Y - TILE_SIZE - 32)
+    ))
+
+    local chest = self.objects[2]
+
+    chest.open = false
+
+    chest.onCollide = function() 
+
+        if  chest.state == 'close' and chest.open then
+            chest.state = 'open'
+            SOUNDS['chest-open']:play()
+            chest.open = true
+
+            local tableLength = #self.objects
+            
+            table.insert(self.objects, GameObject(
+                GAME_OBJECT_DEFS['bow'], chest.x + 5, chest.y + 2))
+            
+            local bow = self.objects[tableLength+1]
+
+            local bowNextX = bow.y - 2*bow.height
+
+            if bow.y - 2*bow.height <= MAP_RENDER_OFFSET_Y then 
+                bowNextX = MAP_RENDER_OFFSET_Y + bow.height/2
+            end
+
+            Timer.tween(1, {
+                [bow] = {x = bow.x, y = bowNextX },
+                }):finish(function()
+                    SOUNDS['bow-reward']:play()
+                end)
+        end
+    end
+    
     for y = 2, self.height -1 do
         for x = 2, self.width - 1 do
             -- change to spawn a pot

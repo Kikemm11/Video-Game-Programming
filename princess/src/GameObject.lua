@@ -43,6 +43,8 @@ function GameObject:init(def, x, y)
     -- an object could be taken or not
     self.takeable = def.takeable
     self.taken = false
+    self.open = false
+    self.used= false
 end
 
 function GameObject:update(dt)

@@ -32,6 +32,7 @@ function Projectile:update(dt)
         if self.obj.y <= topEdge - self.obj.height / 2 then 
             self.obj.y = topEdge - self.obj.height / 2
             self.dead = true
+            self.obj.used = true
         end
     elseif self.direction == 'down' then
         self.obj.y = self.obj.y + d
@@ -41,6 +42,7 @@ function Projectile:update(dt)
         if self.obj.y + self.obj.height >= bottomEdge then
             self.obj.y = bottomEdge - self.obj.height
             self.dead = true
+            self.obj.used = true
         end
     elseif self.direction == 'left' then
         self.obj.x = self.obj.x - d
@@ -48,6 +50,7 @@ function Projectile:update(dt)
         if self.obj.x <= leftEdge then 
             self.obj.x = leftEdge
             self.dead = true
+            self.obj.used = true
         end
     elseif self.direction == 'right' then
         self.obj.x = self.obj.x + d
@@ -55,6 +58,7 @@ function Projectile:update(dt)
         if self.obj.x + self.obj.width >= rightEdge then
             self.obj.x = rightEdge - self.obj.width
             self.dead = true
+            self.obj.used = true
         end
     end
 
@@ -67,6 +71,7 @@ function Projectile:update(dt)
 
     if self.distance > PROJECTILE_MAX_TILES * TILE_SIZE then
         self.dead = true
+        self.obj.used = true
     end
 end
 

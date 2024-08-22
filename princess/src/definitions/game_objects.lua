@@ -62,5 +62,79 @@ GAME_OBJECT_DEFS = {
             player:heal(2)
             SOUNDS['heart-taken']:play()
         end
+    },
+    ['chest'] = {
+        type = 'chest',
+        texture = 'chest',
+        frame = 1,
+        width = 32,
+        height = 32,
+        open = false,
+        solid = true,
+        consumable = false,
+        defaultState = 'close',
+        states = {
+            ['close'] = {
+                frame = 1
+            },
+            ['open'] = {
+                frame = 2
+            }
+        },
+    },
+    ['bow'] = {
+        type = 'bow',
+        texture = 'bow',
+        frame = 1,
+        width = 20,
+        height = 20,
+        solid = false,
+        consumable = true,
+        defaultState = 'default',
+        states = {
+            ['default'] = {
+                frame = 1
+            }
+        },
+        onConsume = function(player)
+            player.activeBow = true
+            SOUNDS['heart-taken']:play()
+        end
+    },
+    ['horizontal-arrow'] = {
+        type = 'horizontal-arrow',
+        texture = 'horizontal-arrow',
+        frame = 1,
+        width = 10,
+        height = 5,
+        solid = true,
+        consumable = false,
+        defaultState = 'left',
+        states = {
+            ['left'] = {
+                frame = 1
+            },
+            ['right'] = {
+                frame = 2
+            }
+        }
+    },
+    ['vertical-arrow'] = {
+        type = 'vertical-arrow',
+        texture = 'vertical-arrow',
+        frame = 1,
+        width = 5,
+        height = 10,
+        solid = true,
+        consumable = false,
+        defaultState = 'up',
+        states = {
+            ['up'] = {
+                frame = 1
+            },
+            ['down'] = {
+                frame = 2
+            }
+        }
     }
 }

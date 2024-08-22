@@ -45,6 +45,7 @@ require 'src/utilities/quads'
 require 'src/world/Doorway'
 require 'src/world/Dungeon'
 require 'src/world/Room'
+require 'src/world/ArrowFactory'
 
 VIRTUAL_WIDTH = 384
 VIRTUAL_HEIGHT = 216
@@ -95,7 +96,11 @@ TEXTURES = {
     ['switches'] = love.graphics.newImage('assets/textures/switches.png'),
     ['entities'] = love.graphics.newImage('assets/textures/entities.png'),
     ['character-pot-lift'] = love.graphics.newImage('assets/textures/character_pot_lift.png'),
-    ['character-pot-walk'] = love.graphics.newImage('assets/textures/character_pot_walk.png')
+    ['character-pot-walk'] = love.graphics.newImage('assets/textures/character_pot_walk.png'),
+    ['chest'] = love.graphics.newImage('assets/textures/chest.png'),
+    ['bow'] = love.graphics.newImage('assets/textures/bow.png'),
+    ['horizontal-arrow'] = love.graphics.newImage('assets/textures/horizontal_arrows.png'),
+    ['vertical-arrow'] = love.graphics.newImage('assets/textures/vertical_arrows.png')
 }
 
 FRAMES = {
@@ -106,7 +111,11 @@ FRAMES = {
     ['switches'] = generateQuads(TEXTURES['switches'], 16, 18),
     ['entities'] = generateQuads(TEXTURES['entities'], 16, 16),
     ['character-pot-lift'] = generateQuads(TEXTURES['character-pot-lift'], 16, 32),
-    ['character-pot-walk'] = generateQuads(TEXTURES['character-pot-walk'], 16, 32)
+    ['character-pot-walk'] = generateQuads(TEXTURES['character-pot-walk'], 16, 32),
+    ['chest'] = generateQuads(TEXTURES['chest'], 32, 32),
+    ['bow'] = generateQuads(TEXTURES['bow'], 20, 20),
+    ['horizontal-arrow'] = generateQuads(TEXTURES['horizontal-arrow'], 10, 5),
+    ['vertical-arrow'] = generateQuads(TEXTURES['vertical-arrow'], 5, 10),
 }
 
 FONTS = {
@@ -123,5 +132,7 @@ SOUNDS = {
     ['hit-player'] = love.audio.newSource('assets/sounds/hit_player.wav', 'static'),
     ['door'] = love.audio.newSource('assets/sounds/door.wav', 'static'),
     ['heart-taken'] = love.audio.newSource('assets/sounds/heart_taken.wav', 'static'),
-    ['pot-wall'] = love.audio.newSource('assets/sounds/pot_wall.wav', 'static')
+    ['pot-wall'] = love.audio.newSource('assets/sounds/pot_wall.wav', 'static'),
+    ['chest-open'] = love.audio.newSource('assets/sounds/chest_open.wav', 'static'),
+    ['bow-reward'] = love.audio.newSource('assets/sounds/bow_reward.wav', 'static')
 }

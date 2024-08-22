@@ -34,6 +34,26 @@ function PlayerIdleState:update(dt)
         local potIdx = 0
 
         for k, obj in pairs(room.objects) do
+
+            if obj.type == 'chest' and not obj.open then
+                local playerY = self.entity.y + self.entity.height / 2
+                local playerHeight = self.entity.height - self.entity.height / 2
+                local playerXCenter = self.entity.x + self.entity.width / 2
+                local playerYCenter = playerY + playerHeight / 2
+                local playerCol = math.floor(playerXCenter / TILE_SIZE)
+                local playerRow = math.floor(playerYCenter / TILE_SIZE)
+                local objXCenter = obj.x + obj.width / 2
+                local objYCenter = obj.y + obj.height / 2
+                local objCol = math.floor(objXCenter / TILE_SIZE)
+                local objRow = math.floor(objYCenter / TILE_SIZE)
+ 
+                if (self.entity.direction == 'up') and (objCol == playerCol) and (objRow == (playerRow - 1) or objRow == (playerRow - 2)) then
+                    obj.open = true
+                    break
+                end
+            end
+
+
             if obj.takeable then
                 local playerY = self.entity.y + self.entity.height / 2
                 local playerHeight = self.entity.height - self.entity.height / 2
@@ -77,5 +97,6 @@ function PlayerIdleState:update(dt)
                 pot = takenPot
             })
         end
+
     end
 end
