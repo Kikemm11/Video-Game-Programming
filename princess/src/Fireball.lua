@@ -1,4 +1,4 @@
-local FIREBALL_SPEED = 150
+local FIREBALL_SPEED = 120
 
 Fireball = Class{}
 

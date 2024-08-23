@@ -21,6 +21,7 @@ require 'src/Player'
 require 'src/Boss'
 require 'src/Projectile'
 require 'src/Fireball'
+require 'src/ArrowFactory'
 require 'src/StateMachine'
 
 require 'src/definitions/entity'
@@ -50,7 +51,7 @@ require 'src/utilities/quads'
 require 'src/world/Doorway'
 require 'src/world/Dungeon'
 require 'src/world/Room'
-require 'src/world/ArrowFactory'
+
 
 VIRTUAL_WIDTH = 384
 VIRTUAL_HEIGHT = 216

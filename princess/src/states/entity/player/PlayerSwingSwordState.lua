@@ -72,8 +72,15 @@ function PlayerSwingSwordState:update(dt)
 
         if boss:collides(self.swordHitbox) and boss.paralized and not boss.invulnerable then
             boss:damage(1)
-            boss:goInvulnerable(1.5)
+            boss:goInvulnerable(1)
             SOUNDS['hit-enemy']:play()
+            if boss.health <= 0 then 
+                boss.dead = true
+                for k, doorway in pairs(self.dungeon.currentRoom.doorways) do
+                    doorway.open = true
+                end
+            end
+
         end
     end
 

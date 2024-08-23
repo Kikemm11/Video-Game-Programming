@@ -192,10 +192,18 @@ function Room:update(dt)
 
         if self.boss and not self.boss.dead and projectile:collides(self.boss) then
             self.boss:damage(1)
+            self.boss:goInvulnerable(1)
             SOUNDS['hit-enemy']:play()
             projectile.dead = true
             projectile.obj.used = true
             self.boss.paralized = true
+
+            if self.boss.health <= 0 then
+                self.boss.dead = true
+                for k, doorway in pairs(self.doorways) do
+                    doorway.open = true
+                end
+            end
         end
 
         if projectile.dead then
@@ -332,7 +340,7 @@ function Room:generateBoss()
         width = 42,
         height = 42,
 
-        health = 100,
+        health = 10,
     }
 
     self.boss.stateMachine = StateMachine {
