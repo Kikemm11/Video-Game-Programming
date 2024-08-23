@@ -136,5 +136,20 @@ GAME_OBJECT_DEFS = {
                 frame = 2
             }
         }
+    },
+    ['fireball'] = {
+        type = 'fireball',
+        texture = 'fireball',
+        frame = 1,
+        width = 16,
+        height = 20,
+        solid = true,
+        consumable = false,
+        defaultState = 'default',
+        states = {
+            ['default'] = {
+                frame = 1
+            }
+        }
     }
 }

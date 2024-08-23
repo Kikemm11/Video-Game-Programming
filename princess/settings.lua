@@ -20,6 +20,7 @@ require 'src/Hitbox'
 require 'src/Player'
 require 'src/Boss'
 require 'src/Projectile'
+require 'src/Fireball'
 require 'src/StateMachine'
 
 require 'src/definitions/entity'
@@ -105,7 +106,8 @@ TEXTURES = {
     ['bow'] = love.graphics.newImage('assets/textures/bow.png'),
     ['horizontal-arrow'] = love.graphics.newImage('assets/textures/horizontal_arrows.png'),
     ['vertical-arrow'] = love.graphics.newImage('assets/textures/vertical_arrows.png'),
-    ['dragon'] = love.graphics.newImage('assets/textures/dragon.png')
+    ['dragon'] = love.graphics.newImage('assets/textures/dragon.png'),
+    ['fireball'] = love.graphics.newImage('assets/textures/fireball.png')
 }
 
 FRAMES = {
@@ -122,6 +124,7 @@ FRAMES = {
     ['horizontal-arrow'] = generateQuads(TEXTURES['horizontal-arrow'], 10, 5),
     ['vertical-arrow'] = generateQuads(TEXTURES['vertical-arrow'], 5, 10),
     ['dragon'] = generateQuads(TEXTURES['dragon'], 42, 42),
+    ['fireball'] = generateQuads(TEXTURES['fireball'], 16, 20),
 }
 
 FONTS = {
@@ -140,5 +143,6 @@ SOUNDS = {
     ['heart-taken'] = love.audio.newSource('assets/sounds/heart_taken.wav', 'static'),
     ['pot-wall'] = love.audio.newSource('assets/sounds/pot_wall.wav', 'static'),
     ['chest-open'] = love.audio.newSource('assets/sounds/chest_open.wav', 'static'),
-    ['bow-reward'] = love.audio.newSource('assets/sounds/bow_reward.wav', 'static')
+    ['bow-reward'] = love.audio.newSource('assets/sounds/bow_reward.wav', 'static'),
+    ['boss-fight'] = love.audio.newSource('assets/sounds/boss_fight.mp3', 'static')
 }

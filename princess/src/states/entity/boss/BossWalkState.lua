@@ -2,13 +2,17 @@ BossWalkState = Class{__includes = BaseState}
 
 function BossWalkState:init(boss, dungeon)
     self.boss = boss
-    self.boss:changeAnimation('walk-down', dungeon)
+    self.boss:changeAnimation('walk-down')
 
     self.dungeon = dungeon
+
+    --print(self.room)
 
     -- used for AI control
     self.moveDuration = 0
     self.movementTimer = 0
+    self.fireballDuration = 2
+    self.fireballTimer = 0
 
     -- keeps track of whether we just hit a wall
     self.bumped = false
@@ -51,6 +55,11 @@ function BossWalkState:update(dt)
             self.bumped = true
         end
     end
+
+
+    
+
+
 end
 
 function BossWalkState:processAI(params, dt)
@@ -59,7 +68,7 @@ function BossWalkState:processAI(params, dt)
 
 
     if self.boss.paralized then
-        self.boss:changeState('idle')
+        self.boss:changeState('idle', self.room)
 
     elseif self.moveDuration == 0 or self.bumped then
         
@@ -75,6 +84,15 @@ function BossWalkState:processAI(params, dt)
     end
 
     self.movementTimer = self.movementTimer + dt
+
+    if self.fireballTimer > self.fireballDuration then
+        self.boss:trhowFireball(room)
+        self.fireballTimer = 0
+    else
+        self.fireballTimer = self.fireballTimer + dt
+    end
+
+
 end
 
 function BossWalkState:render()

@@ -22,3 +22,25 @@ function Boss:render()
     --love.graphics.rectangle('line', self.x, self.y, self.width, self.height)
     --love.graphics.setColor(love.math.colorFromBytes(255, 255, 255, 255))
 end
+
+function Boss:trhowFireball(room)
+    self.room = room
+
+    if self.direction == 'up' then
+        x = self.x + self.width / 2
+        y = self.y
+    elseif self.direction == 'down' then
+        x = self.x + self.width / 2
+        y = self.y + self.height
+    elseif self.direction == 'left' then
+        x = self.x
+        y = self.y + self.height / 2
+    else
+        x = self.x + self.width
+        y = self.y + self.height / 2
+    end
+
+    local fireball = GameObject(GAME_OBJECT_DEFS['fireball'], x, y)
+    table.insert(self.room.fireballs, Fireball(fireball, self.room.player.x, self.room.player.y))
+    
+end

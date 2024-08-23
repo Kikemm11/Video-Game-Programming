@@ -15,30 +15,58 @@ function Room:init(player)
     -- reference to player for collisions, etc.
     self.player = player
 
-    self.activeBoss = False
-    self:generateBoss()
-    
     self.width = MAP_WIDTH
     self.height = MAP_HEIGHT
 
     self.tiles = {}
     self:generateWallsAndFloors()
-
-    -- entities in the room
-    self.entities = {}
-    self:generateEntities()
     
 
-    -- game objects in the room
-    self.objects = {}
-    self:generateObjects()
+    if self.player.activeBow and math.random(10) == 1 then
 
-    -- doorways that lead to other dungeon rooms
-    self.doorways = {}
-    table.insert(self.doorways, Doorway('top', false, self))
-    table.insert(self.doorways, Doorway('bottom', false, self))
-    table.insert(self.doorways, Doorway('left', false, self))
-    table.insert(self.doorways, Doorway('right', false, self))
+        self.activeBoss = true
+
+        self.entities = {}
+        self.objects = {}
+
+        self.doorways = {}
+        local direction = self.player.direction
+        if direction == 'up' then direction = 'bottom'
+        elseif direction == 'down' then direction = 'top' 
+        elseif direction == 'left' then direction = 'right' 
+        else  direction = 'left' end
+        table.insert(self.doorways, Doorway(direction, false, self))
+
+        self:generateBoss()
+
+        -- fireballs
+        self.fireballs = {}
+
+        SOUNDS['dungeon-music']:stop()
+        SOUNDS['boss-fight']:setLooping(true)
+        SOUNDS['boss-fight']:play()
+
+    else
+
+        self.activeBoss = false 
+
+        -- entities in the room
+        self.entities = {}
+        self:generateEntities()
+
+        -- game objects in the room
+        self.objects = {}
+        self:generateObjects()
+
+        -- doorways that lead to other dungeon rooms
+        
+        self.doorways = {}
+        table.insert(self.doorways, Doorway('top', false, self))
+        table.insert(self.doorways, Doorway('bottom', false, self))
+        table.insert(self.doorways, Doorway('left', false, self))
+        table.insert(self.doorways, Doorway('right', false, self))
+
+    end
 
     -- used for centering the dungeon rendering
     self.renderOffsetX = MAP_RENDER_OFFSET_X
@@ -50,6 +78,8 @@ function Room:init(player)
 
     -- projectiles
     self.projectiles = {}
+
+    
 end
 
 function Room:update(dt)
@@ -72,7 +102,7 @@ function Room:update(dt)
             self.player:damage(2)
             self.player:goInvulnerable(1.5)
 
-            if self.player.health == 0 then
+            if self.player.health <= 0 then
                 stateMachine:change('game-over')
             end
         end
@@ -172,6 +202,29 @@ function Room:update(dt)
             table.remove(self.projectiles, k)
         end
     end
+
+    if self.boss then
+        for k, fireball in pairs(self.fireballs) do
+            fireball:update(dt)
+    
+            if  not fireball.dead and not self.player.invulnerable and fireball:collides(self.player) then
+                SOUNDS['hit-player']:play()
+                self.player:damage(1)
+                self.player:goInvulnerable(1.5)
+                fireball.dead = true
+                if self.player.health <= 0 then
+                    stateMachine:change('game-over')
+                end 
+            end
+    
+            if fireball.dead then
+                table.remove(self.fireballs, k)
+            end
+        end
+
+    end
+
+
 end
 
 --[[
@@ -318,43 +371,46 @@ function Room:generateObjects()
         end
     end
 
-    table.insert(self.objects, GameObject(
-        GAME_OBJECT_DEFS['chest'],
-        math.random(MAP_RENDER_OFFSET_X + TILE_SIZE * 2,
-                    VIRTUAL_WIDTH - TILE_SIZE * 3 - 32),
-        math.random(MAP_RENDER_OFFSET_Y + TILE_SIZE * 2,
-                    VIRTUAL_HEIGHT - (VIRTUAL_HEIGHT - MAP_HEIGHT * TILE_SIZE) + MAP_RENDER_OFFSET_Y - TILE_SIZE * 2 - 32)
-    ))
+    if math.random(10) == 1 then
 
-    local chest = self.objects[2]
+        table.insert(self.objects, GameObject(
+            GAME_OBJECT_DEFS['chest'],
+            math.random(MAP_RENDER_OFFSET_X + TILE_SIZE * 2,
+                        VIRTUAL_WIDTH - TILE_SIZE * 3 - 32),
+            math.random(MAP_RENDER_OFFSET_Y + TILE_SIZE * 2,
+                        VIRTUAL_HEIGHT - (VIRTUAL_HEIGHT - MAP_HEIGHT * TILE_SIZE) + MAP_RENDER_OFFSET_Y - TILE_SIZE * 2 - 32)
+        ))
 
-    chest.open = false
+        local chest = self.objects[2]
 
-    chest.onCollide = function() 
+        chest.open = false
 
-        if  chest.state == 'close' and chest.open then
-            chest.state = 'open'
-            SOUNDS['chest-open']:play()
-            chest.open = true
+        chest.onCollide = function() 
 
-            local tableLength = #self.objects
-            
-            table.insert(self.objects, GameObject(
-                GAME_OBJECT_DEFS['bow'], chest.x + 5, chest.y + 2))
-            
-            local bow = self.objects[tableLength+1]
+            if  chest.state == 'close' and chest.open then
+                chest.state = 'open'
+                SOUNDS['chest-open']:play()
+                chest.open = true
 
-            local bowNextX = bow.y - 2*bow.height
+                local tableLength = #self.objects
+                
+                table.insert(self.objects, GameObject(
+                    GAME_OBJECT_DEFS['bow'], chest.x + 5, chest.y + 2))
+                
+                local bow = self.objects[tableLength+1]
 
-            if bow.y - 2*bow.height <= MAP_RENDER_OFFSET_Y then 
-                bowNextX = MAP_RENDER_OFFSET_Y + bow.height/2
+                local bowNextX = bow.y - 2*bow.height
+
+                if bow.y - 2*bow.height <= MAP_RENDER_OFFSET_Y then 
+                    bowNextX = MAP_RENDER_OFFSET_Y + bow.height/2
+                end
+
+                Timer.tween(1, {
+                    [bow] = {x = bow.x, y = bowNextX },
+                    }):finish(function()
+                        SOUNDS['bow-reward']:play()
+                    end)
             end
-
-            Timer.tween(1, {
-                [bow] = {x = bow.x, y = bowNextX },
-                }):finish(function()
-                    SOUNDS['bow-reward']:play()
-                end)
         end
     end
     
@@ -392,6 +448,13 @@ function Room:render()
 
     for k, entity in pairs(self.entities) do
         if not entity.dead then entity:render(self.adjacentOffsetX, self.adjacentOffsetY) end
+    end
+
+    if self.boss then 
+
+        for k, fireball in pairs(self.fireballs) do
+            fireball:render() 
+        end
     end
 
     -- stencil out the door arches so it looks like the player is going through

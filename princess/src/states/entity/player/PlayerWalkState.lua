@@ -91,7 +91,7 @@ function PlayerWalkState:update(dt)
                 pot = takenPot
             })
         end
-    elseif love.keyboard.wasPressed('f') then
+    elseif love.keyboard.wasPressed('f') and self.entity.activeBow then
 
         local room = self.dungeon.currentRoom
         local arrowFactory = ArrowFactory(self.entity.direction, room)

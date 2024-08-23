@@ -46,7 +46,12 @@ function PlayState:init()
 end
 
 function PlayState:exit()
-    SOUNDS['dungeon-music']:stop()
+
+    if not self.dungeon.currentRoom.activeBoss then
+        SOUNDS['dungeon-music']:stop()
+    else
+        SOUNDS['boss-fight']:stop()
+    end
 end
 
 function PlayState:update(dt)
