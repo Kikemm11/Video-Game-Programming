@@ -6,6 +6,11 @@ function Boss:init(def)
 end
 
 function Boss:update(dt)
+
+    if self.health <= 10 then
+        self.walkSpeed = 85
+    end
+
     Entity.update(self, dt)
 end
 
@@ -41,6 +46,6 @@ function Boss:trhowFireball(room)
     end
 
     local fireball = GameObject(GAME_OBJECT_DEFS['fireball'], x, y)
-    table.insert(self.room.fireballs, Fireball(fireball, self.room.player.x, self.room.player.y))
+    table.insert(self.room.fireballs, Fireball(fireball, self.room.player.x, self.room.player.y, self.room.boss))
     
 end

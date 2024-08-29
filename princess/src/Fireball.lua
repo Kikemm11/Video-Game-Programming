@@ -1,13 +1,13 @@
-local FIREBALL_SPEED = 120
-
 Fireball = Class{}
 
-function Fireball:init(obj, x, y)
+function Fireball:init(obj, x, y, boss)
     self.obj = obj
+    self.boss = boss
     self.target_x = x
     self.target_y = y
     self.distance = 0
     self.dead = false
+    self.FIREBALL_SPEED = 120
 
 
     -- Calculate the direction vector from the object's position to the target
@@ -28,8 +28,13 @@ function Fireball:update(dt)
         return
     end
 
-    self.obj.x = self.obj.x + self.dir_x * FIREBALL_SPEED * dt
-    self.obj.y = self.obj.y + self.dir_y * FIREBALL_SPEED * dt
+    if self.boss.health <= 10 then
+        self.FIREBALL_SPEED = 180
+    end
+
+
+    self.obj.x = self.obj.x + self.dir_x * self.FIREBALL_SPEED * dt
+    self.obj.y = self.obj.y + self.dir_y * self.FIREBALL_SPEED * dt
 
     local topEdge = MAP_RENDER_OFFSET_Y + TILE_SIZE
     local bottomEdge = VIRTUAL_HEIGHT - (VIRTUAL_HEIGHT - MAP_HEIGHT * TILE_SIZE) 

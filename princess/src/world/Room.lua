@@ -22,7 +22,7 @@ function Room:init(player)
     self:generateWallsAndFloors()
     
 
-    if self.player.activeBow and math.random(10) == 1 then
+    if self.player.activeBow and math.random(1) == 1 then
 
         self.activeBoss = true
 
@@ -340,7 +340,7 @@ function Room:generateBoss()
         width = 42,
         height = 42,
 
-        health = 10,
+        health = 100,
     }
 
     self.boss.stateMachine = StateMachine {
@@ -379,7 +379,7 @@ function Room:generateObjects()
         end
     end
 
-    if math.random(10) == 1 then
+    if math.random(1) == 1 then
 
         table.insert(self.objects, GameObject(
             GAME_OBJECT_DEFS['chest'],
