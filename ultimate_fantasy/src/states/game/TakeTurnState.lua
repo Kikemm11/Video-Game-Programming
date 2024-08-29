@@ -18,25 +18,38 @@ function TakeTurnState:init(battleState)
 end
 
 function TakeTurnState:update(dt)
+
+    --Check if the rest time of any entitie its complete to take its turn
+
     for k, e in pairs(self.enemies) do
         e:update(dt)
+        e:updateRestTime(dt, self.battleState)
+        if e.completeRest then
+            self:takeEnemyTurn(e)
+            e.completeRest = false
+        end     
+    end
+
+    for k, c in pairs(self.characters) do
+        c:update(dt)
+        c:updateRestTime(dt, self.battleState)
+        if c.completeRest then
+            self:takePartyTurn(c)
+            c.completeRest = false
+        end     
     end
 end
 
 function TakeTurnState:enter(params)
-    self:takePartyTurn(1)
+    --self:takePartyTurn(1)
 end
 
-function TakeTurnState:takePartyTurn(i)
-    if i > #self.characters then
-        self:takeEnemyTurn(1)
-        return
-    end
-    local c = self.characters[i]
+function TakeTurnState:takePartyTurn(character)
+    
+    local c = character
 
-    if c.dead then
-        self:takePartyTurn(i + 1)
-    else
+    if  not c.dead then
+        
         stateStack:push(BattleMessageState(self.battleState, 'Turn for ' .. c.name .. '! Select an action.',
             -- callback for when the battle message is closed
             function()
@@ -46,27 +59,18 @@ function TakeTurnState:takePartyTurn(i)
                 function()
                     if self:checkAllDeath(self.enemies) then
                         self:victory()
-                    else
-                        self:takePartyTurn(i + 1)
                     end
                 end))
             end))
     end
 end
 
-function TakeTurnState:takeEnemyTurn(i)
-    if i > #self.enemies then
-        self:takePartyTurn(1)
-        return
-    end
+function TakeTurnState:takeEnemyTurn(enemie)
+    
+    local e = enemie
 
-    local e = self.enemies[i]
-
-    if e.dead then
-        self:takeEnemyTurn(i + 1)
-    else
-        self.enemyAttacksInARow = self.enemyAttacksInARow + 1
-
+    if not e.dead then
+        
         local message = ''
 
         -- choose a randoms action
@@ -114,10 +118,9 @@ function TakeTurnState:takeEnemyTurn(i)
                 function()
                     -- chance to attack again
                     if self.enemyAttacksInARow < 3 and e.type == 'boss' and math.random(3) == 1 then
-                        self:takeEnemyTurn(i)
+                        self:takeEnemyTurn2()
                     else
                         self.enemyAttacksInARow = 0
-                        self:takeEnemyTurn(i + 1)
                     end
                 end))
         end

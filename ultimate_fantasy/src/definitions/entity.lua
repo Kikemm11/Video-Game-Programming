@@ -97,7 +97,8 @@ ENTITY_DEFS = {
                 HPIV = 4,
                 attackIV = 5,
                 defenseIV = 5,
-                magicIV = 0
+                magicIV = 0,
+                maxRestTime = 4.5
             },
             actions = {
                 {
@@ -133,7 +134,8 @@ ENTITY_DEFS = {
                 HPIV = 2,
                 attackIV = 7,
                 defenseIV = 4,
-                magicIV = 1
+                magicIV = 1,
+                maxRestTime = 5.5
             },
             actions = {
                 {
@@ -184,7 +186,8 @@ ENTITY_DEFS = {
                 HPIV = 2,
                 attackIV = 2,
                 defenseIV = 2,
-                magicIV = 7
+                magicIV = 7,
+                maxRestTime = 7
             },
             actions = {
                 {
@@ -235,7 +238,8 @@ ENTITY_DEFS = {
                 HPIV = 2,
                 attackIV = 3,
                 defenseIV = 2,
-                magicIV = 8
+                magicIV = 8,
+                maxRestTime = 6.25
             },
             actions = {
                 {
@@ -288,6 +292,7 @@ ENTITY_DEFS = {
                 baseAttack = 20,
                 baseDefense = 5,
                 baseMagic = 0,
+                maxRestTime = 4.5,
                 animations = {
                     ['default'] = {
                         frames = {4, 5, 6},
@@ -320,6 +325,7 @@ ENTITY_DEFS = {
                 baseAttack = 30,
                 baseDefense = 7,
                 baseMagic = 0,
+                maxRestTime = 2.5,
                 animations = {
                     ['default'] = {
                         frames = {4, 5, 6},
@@ -352,6 +358,7 @@ ENTITY_DEFS = {
                 baseAttack = 40,
                 baseDefense = 15,
                 baseMagic = 2,
+                maxRestTime = 2,
                 animations = {
                     ['default'] = {
                         frames = {4, 5, 6},
@@ -384,6 +391,7 @@ ENTITY_DEFS = {
                 baseAttack = 60,
                 baseDefense = 18,
                 baseMagic = 5,
+                maxRestTime = 1.5,
                 animations = {
                     ['default'] = {
                         frames = {4, 5, 6},
@@ -416,6 +424,7 @@ ENTITY_DEFS = {
             baseAttack = 100,
             baseDefense = 30,
             baseMagic = 30,
+            maxRestTime = 0,
             animations = {
                 ['default'] = {
                     frames = {4, 5, 6},

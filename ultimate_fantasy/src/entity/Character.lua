@@ -19,6 +19,7 @@ function Character:init(def)
     self.defenseIV = def.defenseIV
     self.magicIV = def.magicIV
     self.currentExp = 0
+    self.currentRestTime = 0
     self:nextExpToLevel()
 end
 

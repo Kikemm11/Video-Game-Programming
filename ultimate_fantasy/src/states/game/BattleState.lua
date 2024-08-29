@@ -33,6 +33,7 @@ function BattleState:init(party, region, onExit)
 
     self.energyBars = {}
     self.expBars = {}
+    self.restBars = {}
 
     -- add party energy and exp bars
     for k, c in pairs(self.party.characters) do
@@ -55,6 +56,15 @@ function BattleState:init(party, region, onExit)
                 value = c.currentExp,
                 max = c.expToLevel
             }
+            self.restBars[c.name] = ProgressBar {
+                x = c.x - math.floor(c.width/4),
+                y = c.y - 11,
+                width = math.floor(c.width*1.5),
+                height = 3,
+                color = {r = 255, g = 1252, b = 933},
+                value = c.currentRestTime,
+                max = c.maxRestTime
+            }
         end
     end
 
@@ -69,6 +79,16 @@ function BattleState:init(party, region, onExit)
                 color = {r = 189, g = 32, b = 32},
                 value = e.currentHP,
                 max = e.HP
+            }
+
+            self.restBars[e.name] = ProgressBar {
+                x = e.x - math.floor(e.width/4),
+                y = e.y - 8,
+                width = math.floor(e.width*1.5),
+                height = 3,
+                color = {r = 255, g = 1252, b = 933},
+                value = e.currentRestTime,
+                max = e.maxRestTime
             }
         end
     end
@@ -96,6 +116,7 @@ function BattleState:createEnemies()
             baseAttack = enemyInfo.baseAttack,
             baseDefense = enemyInfo.baseDefense,
             baseMagic = enemyInfo.baseMagic,
+            maxRestTime = enemyInfo.maxRestTime,
             statusGenerated = enemyInfo.statusGenerated,
             animations = enemyInfo.animations
         })
@@ -109,6 +130,10 @@ function BattleState:createEnemies()
 
         for i = 2, 3 do
             local enemyInfo = enemySet[math.random(#enemySet)]
+
+            local seed = os.time() + os.clock() * 100000
+            local randomMaxTime = enemyInfo.maxRestTime + ( (math.random(3)) - 1 )
+
             local enemy = Enemy({
                 level = enemyInfo.level,
                 name = enemyInfo.type .. '-' .. i,
@@ -124,6 +149,7 @@ function BattleState:createEnemies()
                 baseAttack = enemyInfo.baseAttack,
                 baseDefense = enemyInfo.baseDefense,
                 baseMagic = enemyInfo.baseMagic,
+                maxRestTime = randomMaxTime,
                 statusGenerated = enemyInfo.statusGenerated,
                 animations = enemyInfo.animations
             })
@@ -140,6 +166,10 @@ function BattleState:createEnemies()
 
         for i = 1, numEnemies do
             local enemyInfo = enemySet[math.random(#enemySet)]
+
+            local seed = os.time() + os.clock() * 100000
+            local randomMaxTime = enemyInfo.maxRestTime + ( (math.random(3)) - 1 )
+
             local enemy = Enemy({
                 level = enemyInfo.level,
                 name = enemyInfo.type .. '-' .. i,
@@ -155,6 +185,7 @@ function BattleState:createEnemies()
                 baseAttack = enemyInfo.baseAttack,
                 baseDefense = enemyInfo.baseDefense,
                 baseMagic = enemyInfo.baseMagic,
+                maxRestTime = randomMaxTime,
                 statusGenerated = enemyInfo.statusGenerated,
                 animations = enemyInfo.animations
             })
@@ -205,7 +236,7 @@ function BattleState:update(dt)
 
     for k, e in pairs(self.enemies) do
         if not e.dead then
-            e:update(dt)
+            e:update(dt)    
         end
     end
 end
@@ -223,6 +254,7 @@ function BattleState:render()
         if not c.dead then
             self.energyBars[c.name]:render()
             self.expBars[c.name]:render()
+            self.restBars[c.name]:render()
         end
     end
 
@@ -231,6 +263,7 @@ function BattleState:render()
         if not e.dead then
             e:render()
             self.energyBars[e.name]:render()
+            self.restBars[e.name]:render()
         end
     end
 

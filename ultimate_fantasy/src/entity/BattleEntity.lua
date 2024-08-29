@@ -30,6 +30,10 @@ function BattleEntity:init(def)
     self.magic = self.baseMagic
     
     self.currentHP = self.HP
+
+    self.maxRestTime = def.maxRestTime
+    self.currentRestTime = 0
+    self.completeRest = false
 end
 
 function BattleEntity:damage(amount)
@@ -55,4 +59,22 @@ end
 
 function BattleEntity:computeHealing()
     return math.floor(math.random()*2*self.magic)
+end
+
+function BattleEntity:updateRestTime(dt, battleState)
+
+    if self.currentRestTime >= self.maxRestTime then
+        self.completeRest = true
+        self.currentRestTime = 0
+        Timer.tween(0.5, {
+            [battleState.restBars[self.name]] = {value = self.currentRestTime}
+        })
+    else
+        self.currentRestTime =  self.currentRestTime + dt
+        --self.completeRest = false
+        Timer.tween(0.5, {
+            [battleState.restBars[self.name]] = {value = self.currentRestTime}
+        })
+    end
+
 end
