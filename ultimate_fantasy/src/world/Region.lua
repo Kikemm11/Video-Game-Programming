@@ -27,6 +27,8 @@ function Region:init(def)
         east = def.eastGate,
         west = def.westGate
     }
+
+    self.signPost = SignPost(VIRTUAL_WIDTH/2 - 15, VIRTUAL_HEIGHT/2 - 21)
     
     self:createMaps()
 
@@ -222,4 +224,5 @@ function Region:render()
     for k, npc in pairs(self.npcs) do
         npc:render()
     end
+    self.signPost:render()
 end

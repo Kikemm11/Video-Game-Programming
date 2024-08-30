@@ -58,12 +58,19 @@ require 'src/states/game/StartState'
 require 'src/states/game/StatsMenuState'
 require 'src/states/game/TakeTurnState'
 require 'src/states/game/TheEndState'
+require 'src/states/game/InfoMenuState'
+require 'src/states/game/PartyInfoMenuState'
+require 'src/states/game/InfoStatsState'
+require 'src/states/game/HealPartyMenuState'
+require 'src/states/game/HealCharacterState'
+require 'src/states/game/GlobalHealState'
 
 -- World
 require 'src/world/Region'
 require 'src/world/Tile'
 require 'src/world/TileMap'
 require 'src/world/World'
+require 'src/world/SignPost'
 
 -- Entity
 require 'src/entity/Entity'
@@ -102,7 +109,8 @@ TEXTURES = {
     ['small-worm'] = love.graphics.newImage('assets/textures/enemies/small_worm.png'),
     ['snake'] = love.graphics.newImage('assets/textures/enemies/snake.png'),
     ['pumpking'] = love.graphics.newImage('assets/textures/enemies/pumpking.png'),
-    ['man-eater-flower'] = love.graphics.newImage('assets/textures/enemies/man_eater_flower.png')
+    ['man-eater-flower'] = love.graphics.newImage('assets/textures/enemies/man_eater_flower.png'),
+    ['signpost'] = love.graphics.newImage('assets/textures/signpost.png')
 }
 
 FRAMES = {
@@ -121,7 +129,8 @@ FRAMES = {
     ['small-worm'] = generateQuads(TEXTURES['small-worm'], 16, 16),
     ['snake'] = generateQuads(TEXTURES['snake'], 16, 16),
     ['pumpking'] = generateQuads(TEXTURES['pumpking'], 23, 23),
-    ['man-eater-flower'] = generateQuads(TEXTURES['man-eater-flower'], 30, 38)
+    ['man-eater-flower'] = generateQuads(TEXTURES['man-eater-flower'], 30, 38),
+    ['signpost'] = generateQuads(TEXTURES['signpost'], 30, 42)
 }
 
 FONTS = {

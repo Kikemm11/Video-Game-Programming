@@ -119,6 +119,9 @@ function World:update(dt)
     self.regions[self.current_region]:update(dt)
     self.party:update(dt)
 
+    local party = self.party
+    self.regions[self.current_region].signPost:giveInfo(party)
+
     if love.keyboard.wasPressed('space') then
         local player = self.party:firstAlive()
         -- look for npcs
